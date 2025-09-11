@@ -17,16 +17,8 @@ export const siteConfig = {
       href: "/pricing",
     },
     {
-      label: "Blog",
-      href: "/blog",
-    },
-    {
       label: "About",
       href: "/about",
-    },
-    {
-      label: "Login",
-      href: "/login",
     },
   ],
   navMenuItems: [

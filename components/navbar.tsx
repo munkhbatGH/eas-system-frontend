@@ -16,7 +16,6 @@ import clsx from "clsx";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import {
-  GithubIcon,
   HeartFilledIcon,
   Logo,
 } from "@/components/icons";
@@ -32,7 +31,7 @@ export const Navbar = () => {
             <p className="font-bold text-inherit">EZ систем</p>
           </NextLink>
         </NavbarBrand>
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
+        <ul className="hidden lg:flex gap-5 justify-start ml-10">
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
@@ -60,7 +59,6 @@ export const Navbar = () => {
         <NavbarItem className="hidden md:flex">
           <Button
             className="text-sm font-normal text-default-600 bg-default-100"
-            href="/login"
             startContent={<HeartFilledIcon className="text-danger" />}
             variant="flat"
           >

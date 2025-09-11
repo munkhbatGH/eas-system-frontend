@@ -1,13 +1,19 @@
+
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/layout/footer";
+
 export default function AboutLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <div className="inline-block max-w-lg text-center justify-center">
+    <div className="relative flex flex-col h-screen">
+      <Navbar />
+      <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
         {children}
-      </div>
-    </section>
+      </main>
+      <Footer />
+    </div>
   );
 }
