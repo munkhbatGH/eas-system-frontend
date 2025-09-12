@@ -21,7 +21,7 @@ export const NavbarAdmin = () => {
           <p className="font-bold text-inherit">EZ систем</p>
           <ToggleModeButton />
         </div>
-        <div className="flex items-center gap-2 mr-2">
+        <div className="flex items-center gap-2 mr-2 !text-default-500">
           <Apps />
           <BellRing />
           <ThemeSwitch />

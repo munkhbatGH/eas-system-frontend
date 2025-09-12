@@ -21,7 +21,7 @@ export default function ToggleModeButton() {
           expanded ? 'rotate-180 scale-110' : 'rotate-0 scale-100'
         }`}
       >
-        {expanded ? <PanelRightOpen size={24} /> : <PanelRightClose size={24} />}
+        {!expanded ? <PanelRightOpen size={24} /> : <PanelRightClose size={24} />}
       </span>
     </button>
   );
