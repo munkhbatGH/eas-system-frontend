@@ -1,3 +1,5 @@
+"use client";
+
 import { ThemeSwitch } from "@/components/theme-switch";
 import {  Apps, Logo } from "@/components/icons";
 import { BellRing } from "lucide-react";
@@ -10,6 +12,7 @@ import {
   DropdownItem
 } from "@heroui/dropdown";
 import ToggleModeButton from "@/components/button/toggleModeButton";
+import MobileMenu from "@/components/layout/menu/mobile";
 
 export const NavbarAdmin = () => {
 
@@ -19,7 +22,10 @@ export const NavbarAdmin = () => {
         <div className="flex justify-start items-center">
           <Logo />
           <p className="font-bold text-inherit">EZ систем</p>
-          <ToggleModeButton />
+          <div className="max-sm:hidden">
+            <ToggleModeButton />
+          </div>
+          <MobileMenu />
         </div>
         <div className="flex items-center gap-2 mr-2 !text-default-500">
           <Apps />

@@ -22,7 +22,7 @@ export default function Home() {
             <span className={title({ color: "violet" })}>СИСТЕМ&nbsp;</span>
             <br /><br />
             <span className={title()}>
-              Энгийн загвар, хурдан хөгжүүлэлт, орчин үеийн UI.
+              Загварлаг, орчин үеийн UI.
             </span>
             <div className={subtitle({ class: "mt-4" })}>
               Загварлаг, хурдан мөн орчин үеийн шийдэлттэй вэб аппликейшн.
