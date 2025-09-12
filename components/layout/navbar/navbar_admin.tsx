@@ -1,7 +1,6 @@
 import { ThemeSwitch } from "@/components/theme-switch";
 import {  Apps, Logo } from "@/components/icons";
-import { useSystemStore } from "@/stores/systemStore";
-import { BellRing, Menu } from "lucide-react";
+import { BellRing } from "lucide-react";
 import { Avatar } from "@heroui/avatar";
 
 import {
@@ -10,9 +9,9 @@ import {
   DropdownMenu,
   DropdownItem
 } from "@heroui/dropdown";
+import ToggleModeButton from "@/components/button/toggleModeButton";
 
 export const NavbarAdmin = () => {
-  const { expanded, toggle } = useSystemStore();
 
   return (
     <nav className="sticky top-0 w-full h-[4rem] z-10 px-[1rem] border-b before:absolute before:inset-0 before:backdrop-blur-md before:-z-10 z-30 max-lg:shadow-xs dark:border-gray-600 border-gray-300">
@@ -20,15 +19,7 @@ export const NavbarAdmin = () => {
         <div className="flex justify-start items-center">
           <Logo />
           <p className="font-bold text-inherit">EZ систем</p>
-
-          <button
-            onClick={toggle}
-            aria-controls="sidebar"
-            aria-expanded={expanded}
-            className="ml-20 max-sm:m-0 p-4 focus:outline-none"
-          >
-            <Menu size={24} />
-          </button>
+          <ToggleModeButton />
         </div>
         <div className="flex items-center gap-2 mr-2">
           <Apps />
