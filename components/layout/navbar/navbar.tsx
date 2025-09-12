@@ -35,7 +35,7 @@ export const Navbar = () => {
             <p className="font-bold text-inherit">EZ систем</p>
           </NextLink>
         </NavbarBrand>
-        <ul className="hidden lg:flex gap-5 justify-start ml-10">
+        <ul className="hidden lg:flex gap-10 justify-start ml-10">
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
@@ -89,7 +89,7 @@ export const Navbar = () => {
                       ? "danger"
                       : "foreground"
                 }
-                href="#"
+                href={item.href}
                 size="lg"
               >
                 {item.label}

@@ -2,57 +2,37 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "Next.js + HeroUI",
-  description: "Make beautiful websites regardless of your design experience.",
+  description: "...",
   navItems: [
     {
-      label: "Home",
+      label: "Нүүр",
       href: "/",
     },
     {
-      label: "Docs",
-      href: "/docs",
-    },
-    {
-      label: "Pricing",
-      href: "/pricing",
-    },
-    {
-      label: "About",
+      label: "Бидний тухай",
       href: "/about",
+    },
+    {
+      label: "Үнэ",
+      href: "/pricing",
     },
   ],
   navMenuItems: [
     {
-      label: "Profile",
-      href: "/profile",
+      label: "Нүүр",
+      href: "/",
     },
     {
-      label: "Dashboard",
-      href: "/dashboard",
+      label: "Бидний тухай",
+      href: "/about",
     },
     {
-      label: "Projects",
-      href: "/projects",
+      label: "Үнэ",
+      href: "/pricing",
     },
     {
-      label: "Team",
-      href: "/team",
-    },
-    {
-      label: "Calendar",
-      href: "/calendar",
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-    },
-    {
-      label: "Help & Feedback",
-      href: "/help-feedback",
-    },
-    {
-      label: "Logout",
-      href: "/logout",
+      label: "Нэвтрэх",
+      href: "/login",
     },
   ],
   links: {

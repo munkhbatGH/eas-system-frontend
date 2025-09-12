@@ -14,7 +14,7 @@ export default function LoginPage() {
         <div className="mx-auto h-10 w-auto text-center flex justify-center items-center">
           <Logo size={80} />
         </div>
-        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">Системд тавтай морил</h2>
+        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight">Системд тавтай морил</h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -36,9 +36,8 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <p className="mt-10 text-center text-sm/6 text-gray-400">
-          Бүртгэлгүй?
-          <a href="#" className="font-semibold text-indigo-400 hover:text-indigo-300"> Start a 14 day free trial</a>
+        <p className="mt-10 text-center font-semibold text-indigo-400 hover:text-indigo-300">
+          Та бүртгэлгүй бол?
         </p>
       </div>
     </div>

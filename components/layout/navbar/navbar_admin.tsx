@@ -25,7 +25,7 @@ export const NavbarAdmin = () => {
             onClick={toggle}
             aria-controls="sidebar"
             aria-expanded={expanded}
-            className="ml-20 p-4 focus:outline-none"
+            className="ml-20 max-sm:m-0 p-4 focus:outline-none"
           >
             <Menu size={24} />
           </button>
