@@ -1,4 +1,4 @@
-import { NavbarLogin } from "@/components/navbar/navbar_login";
+import { NavbarLogin } from "@/components/layout/navbar/navbar_login";
 
 export default function LoginLayout({
   children,
