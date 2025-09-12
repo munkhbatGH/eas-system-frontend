@@ -38,22 +38,22 @@ export default function MobileMenu() {
 
           <nav className="flex flex-col items-center space-y-6 text-lg font-semibold">
             <Link
-              href="/"
-              // onClick={() => setIsOpen(false)}
+              href="#"
+              onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
               Home
             </Link>
             <Link
-              href="/about"
-              // onClick={() => setIsOpen(false)}
+              href="#"
+              onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
               About
             </Link>
             <Link
-              href="/contact"
-              // onClick={() => setIsOpen(false)}
+              href="#"
+              onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
               Contact
