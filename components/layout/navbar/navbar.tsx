@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -16,11 +18,13 @@ import clsx from "clsx";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import {
-  HeartFilledIcon,
   Logo,
 } from "@/components/icons";
+import { LogIn } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export const Navbar = () => {
+  const router = useRouter()
 
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
@@ -59,8 +63,9 @@ export const Navbar = () => {
         <NavbarItem className="hidden md:flex">
           <Button
             className="text-sm font-normal text-default-600 bg-default-100"
-            startContent={<HeartFilledIcon className="text-danger" />}
+            startContent={<LogIn className="" />}
             variant="flat"
+            onPress={() => { router.push("/login"); }}
           >
             Нэвтрэх
           </Button>

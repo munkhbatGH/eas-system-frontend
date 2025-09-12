@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Home, Settings, Menu } from "lucide-react";
+import { Home, Settings } from "lucide-react";
 
 import { useSystemStore } from "@/stores/systemStore";
 
@@ -60,7 +60,6 @@ export const Sidebar = () => {
 
     <aside id="sidebar" className={`max-sm:hidden bg-gray-900 text-white flex flex-col justify-start items-center transition-all duration-300 ${expanded ? "w-64" : "w-16"}`}>
 
-      {/* Menu */}
       <nav className={`flex-1 mt-4 space-y-2 ${expanded ? "w-full" : ""}`}>
         <a
           href="/dashboard"
@@ -69,7 +68,7 @@ export const Sidebar = () => {
           <Home size={20} />
           <span
             className={` overflow-hidden whitespace-nowrap transition-all duration-300 
-              ${expanded ? "opacity-100 max-w-xs" : "opacity-0 max-w-0"}`}
+            ${expanded ? "opacity-100 max-w-xs" : "opacity-0 max-w-0"}`}
           >
             Dashboard
           </span>
@@ -82,7 +81,7 @@ export const Sidebar = () => {
           <Settings size={20} />
           <span
             className={` overflow-hidden whitespace-nowrap transition-all duration-300
-              ${expanded ? "opacity-100 max-w-xs" : "opacity-0 max-w-0"}`}
+            ${expanded ? "opacity-100 max-w-xs" : "opacity-0 max-w-0"}`}
           >
             Settings
           </span>
