@@ -31,7 +31,7 @@ export default function Home() {
 
           <div className="mt-8">
             <Snippet hideCopyButton hideSymbol variant="bordered">
-              <span>
+              <span className="text-wrap">
                 Та хэрхэн ашиглахаа мэдэхгүй бол эндээс харна уу <Code color="primary">тест эрх</Code>
               </span>
             </Snippet>
