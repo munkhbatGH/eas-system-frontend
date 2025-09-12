@@ -1,0 +1,14 @@
+
+:root {
+    --hero-primary: #2563eb;
+    --hero-secondary: #1e40af;
+    --hero-accent: #f59e0b;
+    --hero-neutral: #374151;
+    --hero-base-100: #ffffff;
+    --hero-info: #3b82f6;
+    --hero-success: #22c55e;
+    --hero-warning: #eab308;
+    --hero-error: #ef4444;
+
+    --border-primary: "rgb(55 65 81 / var(--tw-border-opacity, 1))";
+}

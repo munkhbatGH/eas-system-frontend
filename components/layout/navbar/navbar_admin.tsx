@@ -1,7 +1,7 @@
 import { ThemeSwitch } from "@/components/theme-switch";
-import {  Logo } from "@/components/icons";
+import {  Apps, Logo } from "@/components/icons";
 import { useSystemStore } from "@/stores/systemStore";
-import { Menu } from "lucide-react";
+import { BellRing, Menu } from "lucide-react";
 import { Avatar } from "@heroui/avatar";
 
 import {
@@ -15,7 +15,7 @@ export const NavbarAdmin = () => {
   const { expanded, toggle } = useSystemStore();
 
   return (
-    <nav className="sticky top-0 w-full h-[4rem] z-10 px-[1rem] border-b before:absolute before:inset-0 before:backdrop-blur-md before:-z-10 z-30 max-lg:shadow-xs">
+    <nav className="sticky top-0 w-full h-[4rem] z-10 px-[1rem] border-b before:absolute before:inset-0 before:backdrop-blur-md before:-z-10 z-30 max-lg:shadow-xs dark:border-gray-600 border-gray-300">
       <div className="flex w-full h-full justify-between items-center">
         <div className="flex justify-start items-center">
           <Logo />
@@ -31,6 +31,8 @@ export const NavbarAdmin = () => {
           </button>
         </div>
         <div className="flex items-center gap-2 mr-2">
+          <Apps />
+          <BellRing />
           <ThemeSwitch />
           <div className="w-[1px] h-[1.3rem] bg-gray-900 dark:bg-white mr-2"></div>
 
