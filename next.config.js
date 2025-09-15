@@ -10,16 +10,17 @@ const withPWA = require('next-pwa')({
 
 const isProd = process.env.NODE_ENV === 'production'
 const repoName = 'eas-system'
-const repoPath = isProd ? `/${repoName}` : ''
-// const repoPath = ''
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   output: 'export',
-  basePath: repoPath,
-  assetPrefix: repoPath,
+  basePath: isProd ? `/${repoName}` : '',
+  assetPrefix: isProd ? `/${repoName}/` : '',
   trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
 }
 
 module.exports = {...withPWA(nextConfig)}

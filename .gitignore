@@ -37,3 +37,10 @@ next-env.d.ts
 pnpm-lock.yaml
 yarn.lock
 bun.lockb
+
+
+# Generated via next-pwa
+**/public/workbox**
+**/public/sw**
+
+out
