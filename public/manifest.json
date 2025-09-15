@@ -1,6 +1,6 @@
 {
-	"name": "eas-system-frontend",
-	"short_name": "eas-system-frontend",
+	"name": "eas-system",
+	"short_name": "eas-system",
 	"description": "Eas system",
 	"icons": [
 		{

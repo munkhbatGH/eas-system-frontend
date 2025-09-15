@@ -3,6 +3,7 @@
 // module.exports = nextConfig;
 
 const isProd = process.env.NODE_ENV === 'production'
+// const repoName = 'eas-system-frontend'
 const repoName = 'eas-system-frontend'
 
 const withPWA = require('next-pwa')({
