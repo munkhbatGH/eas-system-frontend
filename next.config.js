@@ -19,6 +19,10 @@ const nextConfig = {
   basePath: isProd ? `/${repoName}` : '',
   assetPrefix: isProd ? `/${repoName}/` : '',
   trailingSlash: true,
+  images: {
+    unoptimized: true, // required for static export
+  },
 }
 
-module.exports = {...withPWA(nextConfig)}
+// module.exports = {...withPWA(nextConfig)}
+module.exports = withPWA(nextConfig);
