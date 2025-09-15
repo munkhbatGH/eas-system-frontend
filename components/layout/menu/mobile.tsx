@@ -28,7 +28,7 @@ export default function MobileMenu() {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-40 bg-white dark:bg-gray-900 flex flex-col items-center justify-center space-y-8 transition-opacity duration-300 ease-in-out">
+        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center space-y-8 transition-opacity duration-300 ease-in-out before:absolute before:inset-0 before:backdrop-blur-md before:-z-10 z-30 max-lg:shadow-xs">
           <button
             onClick={() => setIsOpen(false)}
             className="absolute top-4 right-4 text-gray-800 dark:text-gray-200 focus:outline-none"
