@@ -4,7 +4,7 @@
 
 const isProd = process.env.NODE_ENV === 'production'
 // const repoName = 'eas-system-frontend'
-const repoName = 'eas-system-frontend'
+const repoName = ''
 
 const withPWA = require('next-pwa')({
 	dest: 'public',
