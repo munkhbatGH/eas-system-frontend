@@ -34,11 +34,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
 	const isProd = process.env.NODE_ENV === 'production'
+  const base = isProd ? '/eas-system-frontend' : '';
   return (
     <html suppressHydrationWarning lang="en">
       <head>
         <meta charSet='utf-8' />
-        <link rel='icon' type='image/png' href={isProd ? `/eas-system-frontend/images/favicon.png` : '/images/favicon.png'} />
+        <link rel='icon' type='image/png' href={`${base}/images/favicon.png`} />
         <meta
           name='viewport'
           content='width=device-width, initial-scale=1, user-scalable=0, viewport-fit=cover'
@@ -49,8 +50,8 @@ export default function RootLayout({
           media='(prefers-color-scheme: dark)'
         />
         <meta name='theme-color' content='#f4f4f5' />
-        <link rel='apple-touch-icon' href={isProd ? '/eas-system-frontend/images/icon-maskable-512.png' : '/images/icon-maskable-512.png'} />
-        <link rel='manifest' href={isProd ? `/eas-system-frontend/manifest.json` : '/manifest.json'} />
+        <link rel='apple-touch-icon' href={`${base}/images/icon-maskable-512.png`} />
+        <link rel='manifest' href={`${base}/manifest.json`} />
       </head>
       <body
         className={clsx(
