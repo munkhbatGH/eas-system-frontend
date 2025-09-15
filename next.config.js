@@ -2,15 +2,15 @@
 // const nextConfig = {};
 // module.exports = nextConfig;
 
+const isProd = process.env.NODE_ENV === 'production'
+const repoName = 'eas-system'
+
 const withPWA = require('next-pwa')({
 	dest: 'public',
 	register: true,
 	skipWaiting: true,
-    // disableMiddleware: true,
+    disable: !isProd,  // disable PWA in dev mode and during static export
 })
-
-const isProd = process.env.NODE_ENV === 'production'
-const repoName = 'next-pwa' // CHANGE THIS
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
