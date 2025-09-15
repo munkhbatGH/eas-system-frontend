@@ -1,33 +1,33 @@
 {
-	"name": "eas-system",
-	"short_name": "eas-system",
+	"name": "eas-system-frontend",
+	"short_name": "eas-system-frontend",
 	"description": "Eas system",
 	"icons": [
 		{
-			"src": "/eas-system/images/icon-192.png",
+			"src": "/eas-system-frontend/images/icon-192.png",
 			"type": "image/png",
 			"sizes": "192x192"
 		},
 		{
-			"src": "/eas-system/images/icon-512.png",
+			"src": "/eas-system-frontend/images/icon-512.png",
 			"type": "image/png",
 			"sizes": "512x512"
 		},
 		{
-			"src": "/eas-system/images/icon-maskable-192.png",
+			"src": "/eas-system-frontend/images/icon-maskable-192.png",
 			"type": "image/png",
 			"sizes": "192x192",
 			"purpose": "maskable"
 		},
 		{
-			"src": "/eas-system/images/icon-maskable-512.png",
+			"src": "/eas-system-frontend/images/icon-maskable-512.png",
 			"type": "image/png",
 			"sizes": "512x512",
 			"purpose": "maskable"
 		}
 	],
-	"start_url": "/eas-system/",
+	"start_url": "/eas-system-frontend/",
 	"orientation": "portrait",
 	"display": "standalone",
-	"scope": "/eas-system/"
+	"scope": "/eas-system-frontend/"
 }
