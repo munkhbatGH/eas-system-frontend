@@ -5,7 +5,6 @@ import {Input} from "@heroui/input";
 import {Button} from "@heroui/button";
 import {Form} from "@heroui/form";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import axios from "@/lib/axios";
 import { useUserStore } from "@/stores/userStore";
 import Cookies from "js-cookie";
@@ -21,7 +20,7 @@ export default function LoginPage() {
       const res = (await axios.post('/auth/login', data)).data
       if (res?.access_token) {
         setToken(res.access_token);
-        Cookies.set(process.env.NEXT_PUBLIC_TOKEN || 'eas-token', res.access_token, { expires: 7 }); // Store token in cookies for 7 days
+        Cookies.set(process.env.NEXT_PUBLIC_TOKEN || 'eas-token', res.access_token, { expires: 7 }); // 1 Day = 24 Hrs = 24*60*60 = 86400
         router.push("/admin");
       }
     } catch (error) {
