@@ -13,8 +13,17 @@ import {
 } from "@heroui/dropdown";
 import ToggleModeButton from "@/components/button/toggleModeButton";
 import MobileMenu from "@/components/layout/menu/mobile";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 export const NavbarAdmin = () => {
+  const router = useRouter()
+
+  const logout = () => {
+    const token_name = process.env.NEXT_PUBLIC_TOKEN || 'eas-token';
+    Cookies.remove(token_name);
+    router.push("/login");
+  };
 
   return (
     <nav className="sticky top-0 w-full h-[4rem] z-10 px-[1rem] border-b before:absolute before:inset-0 before:backdrop-blur-md before:-z-10 z-30 max-lg:shadow-xs dark:border-gray-600 border-gray-300">
@@ -41,7 +50,7 @@ export const NavbarAdmin = () => {
               <DropdownItem key="profile" href="/admin/profile">
                 Хэрэглэгч
               </DropdownItem>
-              <DropdownItem key="logout" className="text-danger" color="danger" href="/login">
+              <DropdownItem key="logout" className="text-danger" color="danger" onPress={logout}>
                 Гарах
               </DropdownItem>
             </DropdownMenu>

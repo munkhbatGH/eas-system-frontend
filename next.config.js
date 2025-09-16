@@ -9,7 +9,7 @@ const withPWA = require('next-pwa')({
 	dest: 'public',
 	register: true,
 	skipWaiting: true,
-    disable: !isProd,  // disable PWA in dev mode and during static export
+  disable: !isProd,  // disable PWA in dev mode and during static export
 })
 
 /** @type {import('next').NextConfig} */
