@@ -1,3 +1,5 @@
+'use client'
+
 import "@/styles/globals.css";
 import "@/styles/main.css";
 
@@ -8,6 +10,7 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
+import { useEffect } from "react";
 
 export const metadata: Metadata = {
   title: {
@@ -34,6 +37,15 @@ export default function RootLayout({
 }) {
 	const isProd = process.env.NODE_ENV === 'production'
   const base = isProd ? '/eas-system-frontend' : '';
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
+    }
+  }, []);
+
   return (
     <html suppressHydrationWarning lang="en">
       <head>
