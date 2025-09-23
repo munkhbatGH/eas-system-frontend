@@ -8,7 +8,8 @@ const repoName = 'eas-system-frontend'
 const withPWA = require('next-pwa')({
 	dest: 'public',
 	register: true,
-	skipWaiting: true,
+  skipWaiting: true,  // activates new SW immediately
+  clientsClaim: true, // takes control of uncontrolled clients
   disable: !isProd,  // disable PWA in dev mode and during static export
 })
 
