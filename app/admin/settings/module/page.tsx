@@ -12,7 +12,7 @@ export default function Profile() {
 
   const list = async () => {
     try {
-      const data = (await axios.get('/schema/list')).data
+      const data = (await axios.get('/schema/list/User')).data
       console.log('--module--list-----', data)
     } catch (error) {
       console.log('Error during login:', error)

@@ -38,25 +38,18 @@ export default function MobileMenu() {
 
           <nav className="flex flex-col items-center space-y-6 text-lg font-semibold">
             <Link
-              href="#"
+              href="/admin/settings"
               onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
-              Home
+              Dashboard
             </Link>
             <Link
-              href="#"
+              href="/admin/settings/module"
               onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
-              About
-            </Link>
-            <Link
-              href="#"
-              onClick={() => setIsOpen(false)}
-              className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
-            >
-              Contact
+              Module
             </Link>
           </nav>
         </div>
