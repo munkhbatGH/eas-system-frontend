@@ -484,19 +484,19 @@ export default function EasTable() {
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-3 items-end">
+        <div className="flex justify-between gap-3 items-end max-sm:flex-col max-sm:items-start">
           <Input
             isClearable
-            className="w-full sm:max-w-[44%]"
+            className="w-full sm:max-w-[44%] max-sm:max-w-[58%]"
             placeholder="Search by name..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
-          <div className="flex gap-3">
+          <div className="flex gap-3 max-sm:max-w-[58%]">
             <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
+              <DropdownTrigger className="sm:flex">
                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
                   Status
                 </Button>
@@ -517,7 +517,7 @@ export default function EasTable() {
               </DropdownMenu>
             </Dropdown>
             <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
+              <DropdownTrigger className="sm:flex">
                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
                   Columns
                 </Button>
@@ -542,7 +542,7 @@ export default function EasTable() {
             </Button>
           </div>
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
           <span className="text-default-400 text-small">Total {users.length} users</span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
@@ -570,7 +570,7 @@ export default function EasTable() {
 
   const bottomContent = useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-center">
+      <div className="py-2 px-2 flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
         <span className="w-[30%] text-small text-default-400">
           {selectedKeys.size === filteredItems.length
             ? "All items selected"
@@ -606,7 +606,7 @@ export default function EasTable() {
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: "max-h-[382px]",
+          wrapper: "max-h-[382px] w-full max-sm:max-w-[58%] overflow-x-auto",
         }}
         selectedKeys={selectedKeys}
         selectionMode="multiple"
