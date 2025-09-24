@@ -7,14 +7,21 @@ import EasTable from "@/components/ui/table";
 
 export default function Profile() {
   
+  const tableConfig = {
+    columnFilters: true,
+    globalFilter: true,
+    pagination: true,
+    sorting: true,
+  }
+
   const columns = [
-    {name: "ID", uid: "id", sortable: true},
-    {name: "NAME", uid: "name", sortable: true},
-    {name: "AGE", uid: "age", sortable: true},
-    {name: "ROLE", uid: "role", sortable: true},
-    {name: "TEAM", uid: "team"},
-    {name: "EMAIL", uid: "email"},
-    {name: "STATUS", uid: "status", sortable: true},
+    {name: "ID", uid: "id", sortable: true, filterable: false},
+    {name: "NAME", uid: "name", sortable: false, filterable: true, filterType: "text"},
+    {name: "AGE", uid: "age", sortable: true, filterable: true, filterType: "number"},
+    {name: "ROLE", uid: "role", sortable: false, filterable: true, filterType: "select", options: ["Admin", "User", "Manager"]},
+    {name: "TEAM", uid: "team", sortable: false, filterable: true, filterType: "text"},
+    {name: "EMAIL", uid: "email", sortable: true, filterable: true, filterType: "text"},
+    {name: "STATUS", uid: "status", sortable: false, filterable: false},
     {name: "ACTIONS", uid: "actions"},
   ];
 
@@ -236,7 +243,7 @@ export default function Profile() {
   return (
     <div>
       <h1 className={title()}>Module</h1>
-      <EasTable columns={columns} datas={datas} />
+      <EasTable tableConfig={tableConfig} columns={columns} datas={datas} />
     </div>
   );
 }

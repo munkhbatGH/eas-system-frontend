@@ -11,6 +11,7 @@ import {
   TableRow, TableCell
 } from "@heroui/table";
 import { useId, useCallback, useEffect, useMemo, useState } from "react";
+import { Select, SelectItem } from "@heroui/select";
 import dynamic from 'next/dynamic';
 
 export const statusOptions = [
@@ -22,32 +23,6 @@ export const statusOptions = [
 export function capitalize(s: any) {
   return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
 }
-
-export const PlusIcon = ({size = 24, width, height, ...props}: any) => {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      focusable="false"
-      height={size || height}
-      role="presentation"
-      viewBox="0 0 24 24"
-      width={size || width}
-      {...props}
-    >
-      <g
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-      >
-        <path d="M6 12h12" />
-        <path d="M12 18V6" />
-      </g>
-    </svg>
-  );
-};
 
 export const VerticalDotsIcon = ({size = 24, width, height, ...props}: any) => {
   return (
@@ -131,9 +106,16 @@ const statusColorMap = {
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
 
+
+interface ColumnFilter {
+  [key: string]: string | number;
+}
+
+
 export default function EasTable(
-  { columns, datas }:
+  { tableConfig, columns, datas }:
   {
+    tableConfig?: any,
     columns: Array<any>,
     datas: Array<any>,
   }
@@ -151,6 +133,33 @@ export default function EasTable(
   const [page, setPage] = useState(1);
   const hasSearchFilter = Boolean(filterValue);
 
+
+  // Column filters state - each column can have its own filter value
+  const [columnFilters, setColumnFilters] = useState<ColumnFilter>({});
+
+  // Update filter for specific column
+  const updateColumnFilter = (columnKey: string, value: string | number) => {
+    // setColumnFilters(prev => ({
+    //   ...prev,
+    //   [columnKey]: value
+    // }));
+  };
+
+  // Clear filter for specific column
+  const clearColumnFilter = (columnKey: string) => {
+    setColumnFilters(prev => {
+      const newFilters = { ...prev };
+      delete newFilters[columnKey];
+      return newFilters;
+    });
+  };
+
+  // Clear all filters
+  const clearAllFilters = () => {
+    setColumnFilters({});
+  };
+
+
   const headerColumns = useMemo(() => {
     if (visibleColumns.size === columns?.length) return columns;
 
@@ -158,21 +167,28 @@ export default function EasTable(
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
-    let filteredUsers = [...datas];
+    let filtered = [...datas];
 
-    if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase()),
-      );
-    }
-    if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status),
-      );
-    }
+    Object.entries(columnFilters).forEach(([columnKey, filterValue]) => {
+      if (filterValue !== '' && filterValue !== undefined) {
+        filtered = filtered.filter(user => {
+          const userValue = user[columnKey as keyof typeof user];
+          
+          if (typeof userValue === 'string' && typeof filterValue === 'string') {
+            return userValue.toLowerCase().includes(filterValue.toLowerCase());
+          }
+          
+          if (typeof userValue === 'number' && typeof filterValue === 'number') {
+            return userValue === filterValue;
+          }
+          
+          return String(userValue).toLowerCase().includes(String(filterValue).toLowerCase());
+        });
+      }
+    });
 
-    return filteredUsers;
-  }, [datas, filterValue, statusFilter]);
+    return filtered;
+  }, [columnFilters]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage) || 1;
 
@@ -274,19 +290,94 @@ export default function EasTable(
     setPage(1);
   }, []);
 
+
+  // Render filter component for each column
+  const renderColumnFilter = (column: typeof columns[0]) => {
+    if (!tableConfig?.columnFilters || !column.filterable) return null;
+
+    const filterValue = columnFilters[column.uid] || '';
+
+    switch (column.filterType) {
+      case 'text':
+        return (
+          <Input
+            size="sm"
+            placeholder={`Filter ${column.name.toLowerCase()}...`}
+            value={String(filterValue)}
+            onChange={(e) => updateColumnFilter(column.uid, e.target.value)}
+            onClear={() => clearColumnFilter(column.uid)}
+            isClearable
+            className="mt-2 text-xs border rounded-lg"
+          />
+        );
+
+      case 'number':
+        return (
+          <Input
+            size="sm"
+            type="number"
+            placeholder={`Filter ${column.name.toLowerCase()}...`}
+            value={String(filterValue)}
+            onChange={(e) => updateColumnFilter(column.uid, Number(e.target.value) || '')}
+            onClear={() => clearColumnFilter(column.uid)}
+            isClearable
+            className="mt-2 text-xs border rounded-lg"
+          />
+        );
+
+      case 'select':
+        if (!column.options) return null;
+        
+        return (
+          <Select
+            size="sm"
+            placeholder={`Filter ${column.name.toLowerCase()}...`}
+            selectedKeys={filterValue ? [String(filterValue)] : []}
+            onSelectionChange={(keys) => {
+              const selectedKey = Array.from(keys)[0];
+              if (selectedKey) {
+                updateColumnFilter(column.uid, String(selectedKey));
+              } else {
+                clearColumnFilter(column.uid);
+              }
+            }}
+            className="mt-2 text-xs border rounded-lg"
+          >
+            {column.options.map((option: any) => (
+              <SelectItem 
+                key={typeof option === 'string' ? option : option.uid}
+                // value={typeof option === 'string' ? option : option.uid}
+              >
+                {typeof option === 'string' ? option : option.name}
+              </SelectItem>
+            ))}
+          </Select>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+
   const topContent = useMemo(() => {
+    const hasActiveFilters = Object.keys(columnFilters).length > 0;
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-3 items-end max-sm:flex-col max-sm:items-start">
-          <Input
-            isClearable
-            className="w-full sm:max-w-[44%] max-sm:max-w-[58%]"
-            placeholder="Search by name..."
-            startContent={<SearchIcon />}
-            value={filterValue}
-            onClear={() => onClear()}
-            onValueChange={onSearchChange}
-          />
+        <div className={`flex gap-3 items-end max-sm:flex-col max-sm:items-start ${tableConfig?.columnFilters ? 'justify-end' : 'justify-between'}`}>
+          {
+            !tableConfig?.columnFilters && (
+              <Input
+                isClearable
+                className="w-full sm:max-w-[44%] max-sm:max-w-[58%]"
+                placeholder="Search ..."
+                startContent={<SearchIcon />}
+                value={filterValue}
+                onClear={() => onClear()}
+                onValueChange={onSearchChange}
+              />
+            )
+          }
           <div className="flex gap-3 max-sm:max-w-[58%]">
             <Dropdown>
               <DropdownTrigger className="sm:flex">
@@ -330,13 +421,22 @@ export default function EasTable(
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button color="primary" endContent={<PlusIcon />}>
-              Add New
-            </Button>
           </div>
         </div>
         <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
           <span className="text-default-400 text-small">Total {datas.length} datas</span>
+
+            {hasActiveFilters && (
+              <Button 
+                color="danger" 
+                variant="light" 
+                size="sm"
+                onPress={clearAllFilters}
+              >
+                Clear All Filters ({Object.keys(columnFilters).length})
+              </Button>
+            )}
+
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -349,6 +449,30 @@ export default function EasTable(
             </select>
           </label>
         </div>
+
+
+
+        {/* Active Filters Display */}
+        {hasActiveFilters && (
+          <div className="flex gap-2 flex-wrap">
+            <span className="text-small text-default-500">Active filters:</span>
+            {Object.entries(columnFilters).map(([columnKey, value]) => {
+              const column = columns.find(col => col.uid === columnKey);
+              return (
+                <Chip
+                  key={columnKey}
+                  onClose={() => clearColumnFilter(columnKey)}
+                  variant="flat"
+                  color="primary"
+                  size="sm"
+                >
+                  {column?.name}: "{value}"
+                </Chip>
+              );
+            })}
+          </div>
+        )}
+
       </div>
     );
   }, [
@@ -406,14 +530,30 @@ export default function EasTable(
         topContent={topContent}
         topContentPlacement="outside"
       >
-        <TableHeader columns={headerColumns}>
+        <TableHeader columns={headerColumns} className="haha">
           {(column) => (
             <TableColumn
               key={column.uid}
               align={column.uid === "actions" ? "center" : "start"}
               allowsSorting={column.sortable}
+              className=""
             >
-              {column.name}
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1">
+                  {column.name}
+                  {columnFilters[column.uid] && (
+                    <Chip
+                      size="sm"
+                      color="primary"
+                      variant="flat"
+                      onClose={() => clearColumnFilter(column.uid)}
+                    >
+                      ×
+                    </Chip>
+                  )}
+                </div>
+                {renderColumnFilter(column)}
+              </div>
             </TableColumn>
           )}
         </TableHeader>
