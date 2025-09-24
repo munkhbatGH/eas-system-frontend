@@ -394,13 +394,13 @@ export default function EasTable(
   const topContent = useMemo(() => {
     const hasActiveFilters = Object.keys(columnFilters).length > 0;
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 w-full max-sm:max-w-[300px]">
         <div className={`flex gap-3 items-end max-sm:flex-col max-sm:items-start ${tableConfig?.columnFilters ? 'justify-end' : 'justify-between'}`}>
           {
             !tableConfig?.columnFilters && (
               <Input
                 isClearable
-                className="w-full sm:max-w-[44%] max-sm:max-w-[58%]"
+                className="w-full"
                 placeholder="Search ..."
                 startContent={<SearchIcon />}
                 value={filterValue}
@@ -409,7 +409,7 @@ export default function EasTable(
               />
             )
           }
-          <div className="flex gap-3 max-sm:max-w-[58%]">
+          <div className="flex gap-3">
             <Button color="primary" endContent={<PlusIcon />}>
               Бүртгэх
             </Button>
@@ -532,8 +532,8 @@ export default function EasTable(
 
   const bottomContent = useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
-        <span className="w-[30%] text-small text-default-400">
+      <div className="w-full max-sm:max-w-[300px] py-2 px-2 flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
+        <span className="text-small text-default-400">
           {selectedKeys.size === filteredItems.length
             ? "All items selected"
             : `${selectedKeys.size} / ${filteredItems.length}`}
@@ -547,7 +547,7 @@ export default function EasTable(
           total={pages}
           onChange={setPage}
         />
-        <div className="hidden sm:flex w-[30%] justify-end gap-2">
+        <div className="hidden sm:flex justify-end gap-2">
           <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
             Өмнөх
           </Button>
