@@ -265,11 +265,6 @@ export default function EasTable(
           </div>
         );
       case "status": {
-
-        let color: string = 'active';
-        if (statusColorMap && item.status) {
-          color = statusColorMap[item.status as keyof typeof statusColorMap]
-        }
         return (
           <Chip className="capitalize" color={getColorFromStatus(item.status)} size="sm" variant="flat">
             {cellValue}
