@@ -242,7 +242,7 @@ export default function Profile() {
   };
 
   return (
-    <div>
+    <div className="w-full max-sm:w-[320px]">
       <h1 className={title()}>Модуль</h1>
       <EasTable tableConfig={tableConfig} columns={columns} datas={datas} />
     </div>

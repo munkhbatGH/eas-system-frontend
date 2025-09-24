@@ -570,7 +570,7 @@ export default function EasTable(
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: "max-h-[382px] w-full max-sm:max-w-[33%] overflow-x-auto",
+          wrapper: "max-h-[382px] w-full max-sm:max-w-[350px] overflow-x-auto",
         }}
         selectedKeys={selectedKeys}
         selectionMode="multiple"
