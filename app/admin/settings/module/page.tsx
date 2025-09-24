@@ -3,6 +3,7 @@
 import { title } from "@/components/primitives";
 import axios from "@/lib/axios";
 import { useEffect } from "react";
+import EasTable from "@/components/ui/table";
 
 export default function Profile() {
   
@@ -22,6 +23,7 @@ export default function Profile() {
   return (
     <div>
       <h1 className={title()}>Module</h1>
+      <EasTable />
     </div>
   );
 }
