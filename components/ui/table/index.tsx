@@ -231,14 +231,12 @@ export default function EasTable(
           </div>
         );
       case "status": {
-        let color: string = 'success';
+        let color: string = 'active';
         if (statusColorMap && item.status) {
           color = statusColorMap[item.status as keyof typeof statusColorMap]
         }
-        if (!color) color = 'success';
         return (
-          // <Chip className="capitalize" color={color} size="sm" variant="flat">
-          <Chip className="capitalize" color="success" size="sm" variant="flat">
+          <Chip className="capitalize" color={color} size="sm" variant="flat">
             {cellValue}
           </Chip>
         );
@@ -388,7 +386,7 @@ export default function EasTable(
             <Dropdown>
               <DropdownTrigger className="sm:flex">
                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
-                  Status
+                  Төлөв
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
@@ -412,7 +410,7 @@ export default function EasTable(
             <Dropdown>
               <DropdownTrigger className="sm:flex">
                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
-                  Columns
+                  Багана
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
@@ -438,7 +436,7 @@ export default function EasTable(
           </div>
         </div>
         <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
-          <span className="text-default-400 text-small">Total {datas.length} datas</span>
+          <span className="text-default-400 text-small">Нийт {datas.length}</span>
 
             {hasActiveFilters && (
               <Button 
@@ -452,7 +450,7 @@ export default function EasTable(
             )}
 
           <label className="flex items-center text-default-400 text-small">
-            Rows per page:
+            Хуудаслалт:
             <select
               className="bg-transparent outline-solid outline-transparent text-default-400 text-small"
               onChange={onRowsPerPageChange}
@@ -505,7 +503,7 @@ export default function EasTable(
         <span className="w-[30%] text-small text-default-400">
           {selectedKeys.size === filteredItems.length
             ? "All items selected"
-            : `${selectedKeys.size} of ${filteredItems.length} selected`}
+            : `${selectedKeys.size} / ${filteredItems.length}`}
         </span>
         <Pagination
           isCompact
@@ -518,10 +516,10 @@ export default function EasTable(
         />
         <div className="hidden sm:flex w-[30%] justify-end gap-2">
           <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
-            Previous
+            Өмнөх
           </Button>
           <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
-            Next
+            Дараах
           </Button>
         </div>
       </div>
