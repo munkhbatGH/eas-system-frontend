@@ -209,34 +209,40 @@ export default function EasTable(
     });
   }, [sortDescriptor, items]);
 
-  const renderCell = useCallback((user: any, columnKey: any) => {
-    const cellValue = user[columnKey];
+  const renderCell = useCallback((item: any, columnKey: any) => {
+    const cellValue = item[columnKey];
 
     switch (columnKey) {
       case "name":
         return (
           <User
-            avatarProps={{radius: "lg", src: user.avatar}}
-            description={user.email}
+            avatarProps={{radius: "lg", src: item.avatar}}
+            description={item.email}
             name={cellValue}
           >
-            {user.email}
+            {item.email}
           </User>
         );
       case "role":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">{cellValue}</p>
-            <p className="text-bold text-tiny capitalize text-default-400">{user.team}</p>
+            <p className="text-bold text-tiny capitalize text-default-400">{item.team}</p>
           </div>
         );
-      case "status":
+      case "status": {
+        let color: string = 'success';
+        if (statusColorMap && item.status) {
+          color = statusColorMap[item.status as keyof typeof statusColorMap]
+        }
+        if (!color) color = 'success';
         return (
-          // <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
+          // <Chip className="capitalize" color={color} size="sm" variant="flat">
           <Chip className="capitalize" color="success" size="sm" variant="flat">
             {cellValue}
           </Chip>
         );
+      }
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
@@ -391,7 +397,10 @@ export default function EasTable(
                 closeOnSelect={false}
                 selectedKeys={statusFilter}
                 selectionMode="multiple"
-                // onSelectionChange={setStatusFilter}
+                onSelectionChange={(keys) => {
+                  const selectedKey = Array.from(keys)[0];
+                  setStatusFilter(String(selectedKey));
+                }}
               >
                 {statusOptions.map((status) => (
                   <DropdownItem key={status.uid} className="capitalize">
@@ -412,7 +421,12 @@ export default function EasTable(
                 closeOnSelect={false}
                 selectedKeys={visibleColumns}
                 selectionMode="multiple"
-                // onSelectionChange={setVisibleColumns}
+                onSelectionChange={(keys) => {
+                  const selectedKeys = new Set(
+                    Array.isArray(keys) ? keys : Array.from(keys)
+                  );
+                  setVisibleColumns(selectedKeys);
+                }}
               >
                 {columns.map((column) => (
                   <DropdownItem key={column.uid} className="capitalize">
