@@ -410,10 +410,10 @@ export default function EasTable(
             )
           }
           <div className="flex gap-3">
-            <Button color="primary" endContent={<PlusIcon />}>
+            <Button color="success" endContent={<PlusIcon />} variant="flat">
               Бүртгэх
             </Button>
-            <Button color="success" endContent={<RefreshCcw width={16} height={16} />}>
+            <Button color="default" endContent={<RefreshCcw className="text-small" width={16} height={16} />} variant="flat">
               Сэргээх
             </Button>
             {/* <Dropdown>
