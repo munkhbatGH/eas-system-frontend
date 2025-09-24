@@ -13,6 +13,7 @@ import {
 import { useId, useCallback, useEffect, useMemo, useState } from "react";
 import { Select, SelectItem } from "@heroui/select";
 import dynamic from 'next/dynamic';
+import { RefreshCcw } from "lucide-react";
 
 export const statusOptions = [
   {name: "Active", uid: "active"},
@@ -98,6 +99,33 @@ export const ChevronDownIcon = ({strokeWidth = 1.5, ...otherProps}) => {
   );
 };
 
+export const PlusIcon = ({size = 24, width, height, ...props}: any) => {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      focusable="false"
+      height={size || height}
+      role="presentation"
+      viewBox="0 0 24 24"
+      width={size || width}
+      {...props}
+    >
+      <g
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+      >
+        <path d="M6 12h12" />
+        <path d="M12 18V6" />
+      </g>
+    </svg>
+  );
+};
+
+
 const statusColorMap = {
   active: "success",
   paused: "danger",
@@ -134,18 +162,13 @@ export default function EasTable(
   const hasSearchFilter = Boolean(filterValue);
 
 
-  // Column filters state - each column can have its own filter value
   const [columnFilters, setColumnFilters] = useState<ColumnFilter>({});
-
-  // Update filter for specific column
   const updateColumnFilter = (columnKey: string, value: string | number) => {
     // setColumnFilters(prev => ({
     //   ...prev,
     //   [columnKey]: value
     // }));
   };
-
-  // Clear filter for specific column
   const clearColumnFilter = (columnKey: string) => {
     setColumnFilters(prev => {
       const newFilters = { ...prev };
@@ -153,8 +176,6 @@ export default function EasTable(
       return newFilters;
     });
   };
-
-  // Clear all filters
   const clearAllFilters = () => {
     setColumnFilters({});
   };
@@ -209,6 +230,19 @@ export default function EasTable(
     });
   }, [sortDescriptor, items]);
 
+
+  const statusColorMap = {
+    active: "success",
+    paused: "danger",
+    vacation: "warning",
+  } as const;
+  
+  type ChipColor = typeof statusColorMap[keyof typeof statusColorMap]; // "success" | "danger" | "warning"
+  
+  function getColorFromStatus(status: string): ChipColor | "default" {
+    return statusColorMap[status as keyof typeof statusColorMap] || "default";
+  }
+
   const renderCell = useCallback((item: any, columnKey: any) => {
     const cellValue = item[columnKey];
 
@@ -231,12 +265,13 @@ export default function EasTable(
           </div>
         );
       case "status": {
+
         let color: string = 'active';
         if (statusColorMap && item.status) {
           color = statusColorMap[item.status as keyof typeof statusColorMap]
         }
         return (
-          <Chip className="capitalize" color={color} size="sm" variant="flat">
+          <Chip className="capitalize" color={getColorFromStatus(item.status)} size="sm" variant="flat">
             {cellValue}
           </Chip>
         );
@@ -294,8 +329,6 @@ export default function EasTable(
     setPage(1);
   }, []);
 
-
-  // Render filter component for each column
   const renderColumnFilter = (column: typeof columns[0]) => {
     if (!tableConfig?.columnFilters || !column.filterable) return null;
 
@@ -363,7 +396,6 @@ export default function EasTable(
     }
   };
 
-
   const topContent = useMemo(() => {
     const hasActiveFilters = Object.keys(columnFilters).length > 0;
     return (
@@ -383,7 +415,13 @@ export default function EasTable(
             )
           }
           <div className="flex gap-3 max-sm:max-w-[58%]">
-            <Dropdown>
+            <Button color="primary" endContent={<PlusIcon />}>
+              Бүртгэх
+            </Button>
+            <Button color="success" endContent={<RefreshCcw width={16} height={16} />}>
+              Сэргээх
+            </Button>
+            {/* <Dropdown>
               <DropdownTrigger className="sm:flex">
                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
                   Төлөв
@@ -406,7 +444,7 @@ export default function EasTable(
                   </DropdownItem>
                 ))}
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
             <Dropdown>
               <DropdownTrigger className="sm:flex">
                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
