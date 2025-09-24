@@ -12,6 +12,7 @@ export default function Profile() {
     globalFilter: true,
     pagination: true,
     sorting: true,
+    tableClasses: "max-sm:max-w-[58%]",
   }
 
   const columns = [

@@ -104,7 +104,7 @@ const statusColorMap = {
   vacation: "warning",
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["id", "name", "age", "role", "team", "email", "status", "actions"];
 
 
 interface ColumnFilter {
@@ -535,7 +535,7 @@ export default function EasTable(
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: "max-h-[382px] w-full max-sm:max-w-[58%] overflow-x-auto",
+          wrapper: "max-h-[382px] w-full max-sm:max-w-[33%] overflow-x-auto",
         }}
         selectedKeys={selectedKeys}
         selectionMode="multiple"
