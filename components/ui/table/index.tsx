@@ -571,11 +571,13 @@ export default function EasTable(
       loading: () => (
         <div className="w-full max-h-[382px] animate-pulse">
           <div className="h-12 bg-gray-200 rounded mb-4" />
-          <div className="border rounded-lg">
-            <div className="h-10 bg-gray-100 border-b" />
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-12 border-b bg-gray-50" />
-            ))}
+          <div className="rounded-lg gap-1 flex flex-col">
+            <div className="h-10 bg-gray-100" />
+            <div>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="h-12 bg-gray-50" />
+              ))}
+            </div>
           </div>
           <div className="h-12 bg-gray-200 rounded mt-4" />
         </div>
