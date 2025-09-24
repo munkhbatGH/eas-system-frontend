@@ -2,10 +2,11 @@
 
 import { title } from "@/components/primitives";
 import axios from "@/lib/axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EasTable from "@/components/ui/table";
 
 export default function Profile() {
+  const [columns, setColumns] = useState([]);
   
   const tableConfig = {
     columnFilters: true,
@@ -15,16 +16,16 @@ export default function Profile() {
     tableClasses: "max-sm:max-w-[58%]",
   }
 
-  const columns = [
-    {name: "ID", uid: "id", sortable: true, filterable: false},
-    {name: "NAME", uid: "name", sortable: false, filterable: true, filterType: "text"},
-    {name: "AGE", uid: "age", sortable: true, filterable: true, filterType: "number"},
-    {name: "ROLE", uid: "role", sortable: false, filterable: true, filterType: "select", options: ["Admin", "User", "Manager"]},
-    {name: "TEAM", uid: "team", sortable: false, filterable: true, filterType: "text"},
-    {name: "EMAIL", uid: "email", sortable: true, filterable: true, filterType: "text"},
-    {name: "STATUS", uid: "status", sortable: false, filterable: false},
-    {name: "ACTIONS", uid: "actions"},
-  ];
+  // const columns = [
+  //   {name: "ID", uid: "id", sortable: true, filterable: false},
+  //   {name: "NAME", uid: "name", sortable: false, filterable: true, filterType: "text"},
+  //   {name: "AGE", uid: "age", sortable: true, filterable: true, filterType: "number"},
+  //   {name: "ROLE", uid: "role", sortable: false, filterable: true, filterType: "select", options: ["Admin", "User", "Manager"]},
+  //   {name: "TEAM", uid: "team", sortable: false, filterable: true, filterType: "text"},
+  //   {name: "EMAIL", uid: "email", sortable: true, filterable: true, filterType: "text"},
+  //   {name: "STATUS", uid: "status", sortable: false, filterable: false},
+  //   {name: "ACTIONS", uid: "actions"},
+  // ];
 
   const datas = [
     {
@@ -228,14 +229,20 @@ export default function Profile() {
       email: "mia.robinson@example.com",
     },
   ];
+  
   useEffect(() => {
-    list()
+    getConfig()
   }, []);
+  useEffect(() => {
+    console.log('----columns---2--', columns)
+  }, [columns]);
 
-  const list = async () => {
+  const getConfig = async () => {
     try {
-      const data = (await axios.get('/schema/config/User')).data
-      console.log('--module--list-----', data)
+      const data = (await axios.get('/schema/config/SetModule')).data
+      console.log('----list-----', data)
+      setColumns(data)
+      console.log('----columns--1---', columns)
     } catch (error) {
       console.log('Error during login:', error)
     }

@@ -125,13 +125,6 @@ export const PlusIcon = ({size = 24, width, height, ...props}: any) => {
   );
 };
 
-
-const statusColorMap = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
-};
-
 const INITIAL_VISIBLE_COLUMNS = ["id", "name", "age", "role", "team", "email", "status", "actions"];
 
 
