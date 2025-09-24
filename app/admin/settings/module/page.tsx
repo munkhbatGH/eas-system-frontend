@@ -243,7 +243,7 @@ export default function Profile() {
 
   return (
     <div>
-      <h1 className={title()}>Module</h1>
+      <h1 className={title()}>Модуль</h1>
       <EasTable tableConfig={tableConfig} columns={columns} datas={datas} />
     </div>
   );

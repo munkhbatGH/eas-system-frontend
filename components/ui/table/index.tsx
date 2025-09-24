@@ -468,32 +468,6 @@ export default function EasTable(
             </Dropdown>
           </div>
         </div>
-        <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
-          <span className="text-default-400 text-small">Нийт {datas.length}</span>
-
-            {hasActiveFilters && (
-              <Button 
-                color="danger" 
-                variant="light" 
-                size="sm"
-                onPress={clearAllFilters}
-              >
-                Clear All Filters ({Object.keys(columnFilters).length})
-              </Button>
-            )}
-
-          <label className="flex items-center text-default-400 text-small">
-            Хуудаслалт:
-            <select
-              className="bg-transparent outline-solid outline-transparent text-default-400 text-small"
-              onChange={onRowsPerPageChange}
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-            </select>
-          </label>
-        </div>
 
 
 
@@ -531,13 +505,41 @@ export default function EasTable(
   ]);
 
   const bottomContent = useMemo(() => {
+    const hasActiveFilters = Object.keys(columnFilters).length > 0;
     return (
       <div className="w-full max-sm:max-w-[300px] py-2 px-2 flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
-        <span className="text-small text-default-400">
-          {selectedKeys.size === filteredItems.length
-            ? "All items selected"
-            : `${selectedKeys.size} / ${filteredItems.length}`}
-        </span>
+        <div className="flex gap-5">
+          <label className="flex items-center text-default-400 text-small">
+            Хуудаслалт:
+            <select
+              className="bg-transparent outline-solid outline-transparent text-default-400 text-small"
+              onChange={onRowsPerPageChange}
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+            </select>
+          </label>
+          {/* <span className="text-small text-default-400">
+            {selectedKeys.size === filteredItems.length
+              ? "All items selected"
+              : `${selectedKeys.size} / ${filteredItems.length}`}
+          </span> */}
+          <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
+            <span className="text-default-400 text-small">Нийт {datas.length}</span>
+
+              {hasActiveFilters && (
+                <Button 
+                  color="danger" 
+                  variant="light" 
+                  size="sm"
+                  onPress={clearAllFilters}
+                >
+                  Clear All Filters ({Object.keys(columnFilters).length})
+                </Button>
+              )}
+          </div>
+        </div>
         <Pagination
           isCompact
           showControls
