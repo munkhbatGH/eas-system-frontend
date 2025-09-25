@@ -125,8 +125,6 @@ export const PlusIcon = ({size = 24, width, height, ...props}: any) => {
   );
 };
 
-const INITIAL_VISIBLE_COLUMNS = ["id", "name", "age", "role", "team", "email", "status", "actions"];
-
 
 interface ColumnFilter {
   [key: string]: string | number;
@@ -134,8 +132,9 @@ interface ColumnFilter {
 
 
 export default function EasTable(
-  { tableConfig, columns, datas }:
+  { isTableLoading, tableConfig, columns, datas }:
   {
+    isTableLoading?: boolean,
     tableConfig?: any,
     columns: Array<any>,
     datas: Array<any>,
@@ -144,7 +143,7 @@ export default function EasTable(
   const tableId = useId();
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
-  const [visibleColumns, setVisibleColumns] = useState(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [visibleColumns, setVisibleColumns] = useState(new Set(columns.map(a => { return a.uid })));
   const [statusFilter, setStatusFilter] = useState("all");
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortDescriptor, setSortDescriptor] = useState({
@@ -153,7 +152,7 @@ export default function EasTable(
   });
   const [page, setPage] = useState(1);
   const hasSearchFilter = Boolean(filterValue);
-
+  
 
   const [columnFilters, setColumnFilters] = useState<ColumnFilter>({});
   const updateColumnFilter = (columnKey: string, value: string | number) => {
@@ -597,9 +596,9 @@ export default function EasTable(
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No datas found"} items={sortedItems}>
+        <TableBody emptyContent={"Өгөгдөл байхгүй"} items={sortedItems}>
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item._id}>
               {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
             </TableRow>
           )}
@@ -626,6 +625,77 @@ export default function EasTable(
   );
   
   return (
-    <DynamicTable />
+    // <DynamicTable />
+    <>
+      {
+        isTableLoading && (
+          <div className="w-full max-h-[382px] animate-pulse">
+            <div className="h-12 bg-gray-200 rounded mb-4" />
+            <div className="rounded-lg gap-1 flex flex-col">
+              <div className="h-10 bg-gray-100" />
+              <div>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="h-12 bg-gray-50" />
+                ))}
+              </div>
+            </div>
+            <div className="h-12 bg-gray-200 rounded mt-4" />
+          </div>
+        )
+      }
+      {
+        !isTableLoading && (
+          <Table
+            id={tableId}
+            isHeaderSticky
+            aria-label="Example table with custom cells, pagination and sorting"
+            bottomContent={bottomContent}
+            bottomContentPlacement="outside"
+            classNames={{
+              wrapper: "max-h-[382px] w-full max-sm:max-w-[350px] overflow-x-auto",
+            }}
+            selectedKeys={selectedKeys}
+            selectionMode="multiple"
+            topContent={topContent}
+            topContentPlacement="outside"
+          >
+            <TableHeader columns={headerColumns} className="haha">
+              {(column) => (
+                <TableColumn
+                  key={column.uid}
+                  align={column.uid === "actions" ? "center" : "start"}
+                  allowsSorting={column.sortable}
+                  className=""
+                >
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-1">
+                      {column.name}
+                      {columnFilters[column.uid] && (
+                        <Chip
+                          size="sm"
+                          color="primary"
+                          variant="flat"
+                          onClose={() => clearColumnFilter(column.uid)}
+                        >
+                          ×
+                        </Chip>
+                      )}
+                    </div>
+                    {renderColumnFilter(column)}
+                  </div>
+                </TableColumn>
+              )}
+            </TableHeader>
+            <TableBody emptyContent={"Өгөгдөл байхгүй"} items={sortedItems}>
+              {(item) => (
+                <TableRow key={item._id}>
+                  {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )
+      }
+    </>
   );
 }

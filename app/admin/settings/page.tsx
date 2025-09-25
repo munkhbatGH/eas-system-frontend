@@ -1,7 +1,7 @@
 "use client"
 
 import { title } from "@/components/primitives";
-import axios from "@/lib/axios";
+import { fetchClient } from "@/lib/fetchClient";
 import { useEffect } from "react";
 
 export default function Profile() {
@@ -12,7 +12,7 @@ export default function Profile() {
 
   const list = async () => {
     try {
-      // const data = (await axios.get('/schema/list')).data
+      // const data = await fetchClient('/schema/list')
       // console.log('----list-----', data)
     } catch (error) {
       console.log('Error during login:', error);
