@@ -45,14 +45,14 @@ export default function MobileMenu() {
               Dashboard
             </Link>
             <Link
-              href="/admin/settings/module"
+              href="/admin/settings/mod"
               onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
               Module
             </Link>
             <Link
-              href="/admin/settings/module"
+              href="/admin/settings/mod"
               onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
