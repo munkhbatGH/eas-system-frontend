@@ -230,7 +230,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true)
   const [isDialog, setIsDialog] = useState(false)
   const [isTableLoading, setIsTableLoading] = useState(true)
-  const [submitted, setSubmitted] = useState(null);
+  const [submitted, setSubmitted] = useState<{ [k: string]: FormDataEntryValue } | null>(null);
   
   const tableConfig = {
     columnFilters: true,
@@ -288,13 +288,11 @@ export default function Profile() {
     setIsDialog(false)
   }
   const _onSubmit = (e: any) => {
-    console.log('--_onSubmit--e-----', e)
     e.preventDefault();
 
     const data = Object.fromEntries(new FormData(e.currentTarget));
     console.log('----data-----', data)
-
-    // setSubmitted(data);
+    setSubmitted(data);
   };
 
   if (loading) {
@@ -312,15 +310,14 @@ export default function Profile() {
           <Form className="w-full max-w-xs py-3" onSubmit={_onSubmit}>
             <Input
               isRequired
-              errorMessage="Please enter a valid email"
-              label="Email"
+              errorMessage="Утга шаардана"
+              label="Нэр"
               labelPlacement="outside"
-              name="email"
-              placeholder="Enter your email"
-              type="email"
+              name="name"
+              placeholder="Нэр"
             />
-            <Button type="submit" color="primary">
-              Submit
+            <Button type="submit" color="primary" className="mt-3">
+              Бүртгэх
             </Button>
             {submitted && (
               <div className="text-small text-default-500">
