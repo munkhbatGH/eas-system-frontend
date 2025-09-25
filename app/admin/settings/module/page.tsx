@@ -295,7 +295,9 @@ export default function Profile() {
         <div className="flex flex-wrap gap-3">
           <Button onPress={_open}>Open</Button>
         </div>
-        <EasModal isDialog={isDialog} _close={_close} _open={_open} />
+        <EasModal isDialog={isDialog} _close={_close} _open={_open}>
+          <p>Modal body.</p>
+        </EasModal>
         <EasTable isTableLoading={isTableLoading} tableConfig={tableConfig} columns={columns} datas={datas} />
       </div>
     </div>
