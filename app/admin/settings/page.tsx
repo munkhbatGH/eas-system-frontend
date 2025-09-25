@@ -4,7 +4,7 @@ import { title } from "@/components/primitives";
 import { fetchClient } from "@/lib/fetchClient";
 import { useEffect } from "react";
 
-export default function Profile() {
+export default function Settings() {
   
   useEffect(() => {
     list()
@@ -15,7 +15,7 @@ export default function Profile() {
       // const data = await fetchClient('/schema/list')
       // console.log('----list-----', data)
     } catch (error) {
-      console.log('Error during login:', error);
+      console.log('Error Settings:', error);
     }
   };
 

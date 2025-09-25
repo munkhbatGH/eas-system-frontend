@@ -17,6 +17,8 @@ export const Sidebar = () => {
     console.log('----openMenu-----', openMenu, openMenu === "settings")
   }, [openMenu]);
 
+	const isProd = process.env.NODE_ENV === 'production'
+  const baseUrl = isProd ? '/eas-system-frontend' : '';
   return (
     <aside id="sidebar" className={`max-sm:hidden border-r dark:border-gray-600 border-gray-300 flex flex-col justify-start items-center transition-all duration-300 ${expanded ? "w-64" : "w-16"}`}>
 
@@ -46,13 +48,13 @@ export const Sidebar = () => {
         {openMenu === "settings" && (
           <div className="ml-6 space-y-1">
             <a
-              href="/admin/settings/module"
+              href={`${baseUrl}/admin/settings/mod`}
               className={`flex items-center py-3 px-8 rounded hover:bg-gray-700 transition-colors text-inherit ${expanded ? "gap-2" : ""}`}
             >
               <span>Модуль</span>
             </a>
             <a
-              href="/admin/settings/menu"
+              href={`${baseUrl}/admin/settings/menu`}
               className={`flex items-center py-3 px-8 rounded hover:bg-gray-700 transition-colors text-inherit ${expanded ? "gap-2" : ""}`}
             >
               <span>Цэс</span>

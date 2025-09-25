@@ -15,7 +15,7 @@ export default function Profile() {
       const res = await fetchClient('/auth/profile')
       console.log('----getUserInfo-----', res)
     } catch (error) {
-      console.log('Error during login:', error);
+      console.log('Error Profile:', error);
     }
   };
 

@@ -272,7 +272,7 @@ export default function Profile() {
       ])
       console.log('----columns--1---', columns)
     } catch (error) {
-      console.log('Error during login:', error)
+      console.log('Error Mod:', error)
     } finally {
       setLoading(false)
       setIsTableLoading(false)
