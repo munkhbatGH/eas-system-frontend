@@ -17,7 +17,6 @@ export async function fetchClient(
 
     const tok = Cookies.get(token_name);
     if (tok) {
-        console.log('----fetch tok-----', tok)
         headers.Authorization = `Bearer ${tok}`;
     }
 
@@ -33,8 +32,9 @@ export async function fetchClient(
     }
 
     if (!res.ok) {
-        const error = await res.text()
-        throw new Error(`Fetch error ${res.status}: ${error}`)
+        const error = await res.json()
+        // throw new Error(`${res.status}: ${error?.message}`)
+        throw new Error(`${error?.message}`)
     }
 
     return res.json()

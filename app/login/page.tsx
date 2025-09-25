@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/userStore";
 import Cookies from "js-cookie";
 import { fetchClient } from "@/lib/fetchClient";
+import { addToast } from "@heroui/toast";
 
 export default function LoginPage() {
   const router = useRouter()
@@ -26,8 +27,11 @@ export default function LoginPage() {
         Cookies.set(process.env.NEXT_PUBLIC_TOKEN || 'eas-token', res.access_token, { expires: 7 }); // 1 Day = 24 Hrs = 24*60*60 = 86400
         router.push("/admin");
       }
-    } catch (error) {
-      console.log('Error during login:', error);
+    } catch (error: any) {
+      addToast({
+        title: error.toString(),
+        // color: "danger",
+      })
     }
   };
   
