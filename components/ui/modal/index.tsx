@@ -50,10 +50,10 @@ export default function EasModal({ isDialog, size, _open, _close, children }: an
               <ModalBody>
                 {children}
               </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onPress={onClose}>Action</Button>
+              {/* <ModalFooter>
+                <Button type="submit" color="primary" onPress={onClose}>Action</Button>
                 <Button color="danger" variant="light" onPress={onClose}>Close</Button>
-              </ModalFooter>
+              </ModalFooter> */}
             </>
           )}
         </ModalContent>

@@ -6,6 +6,8 @@ import EasTable from "@/components/ui/table";
 import { fetchClient } from "@/lib/fetchClient";
 import EasModal from "@/components/ui/modal";
 import { Button } from "@heroui/button";
+import { Form } from "@heroui/form";
+import { Input } from "@heroui/input";
 
 export default function Profile() {
   const [columns, setColumns] = useState([
@@ -228,6 +230,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true)
   const [isDialog, setIsDialog] = useState(false)
   const [isTableLoading, setIsTableLoading] = useState(true)
+  const [submitted, setSubmitted] = useState(null);
   
   const tableConfig = {
     columnFilters: true,
@@ -284,10 +287,20 @@ export default function Profile() {
     console.log('----_close-----')
     setIsDialog(false)
   }
+  const _onSubmit = (e: any) => {
+    console.log('--_onSubmit--e-----', e)
+    e.preventDefault();
+
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    console.log('----data-----', data)
+
+    // setSubmitted(data);
+  };
 
   if (loading) {
     return <p>Loading ....</p>
   }
+
   return (
     <div className="w-full max-sm:w-[320px]">
       <h1 className={title()}>Модуль</h1>
@@ -295,8 +308,26 @@ export default function Profile() {
         <div className="flex flex-wrap gap-3">
           <Button onPress={_open}>Open</Button>
         </div>
-        <EasModal isDialog={isDialog} _close={_close} _open={_open}>
-          <p>Modal body.</p>
+        <EasModal isDialog={isDialog} _close={_close} _open={_open} >
+          <Form className="w-full max-w-xs py-3" onSubmit={_onSubmit}>
+            <Input
+              isRequired
+              errorMessage="Please enter a valid email"
+              label="Email"
+              labelPlacement="outside"
+              name="email"
+              placeholder="Enter your email"
+              type="email"
+            />
+            <Button type="submit" color="primary">
+              Submit
+            </Button>
+            {submitted && (
+              <div className="text-small text-default-500">
+                You submitted: <code>{JSON.stringify(submitted)}</code>
+              </div>
+            )}
+          </Form>
         </EasModal>
         <EasTable isTableLoading={isTableLoading} tableConfig={tableConfig} columns={columns} datas={datas} />
       </div>
