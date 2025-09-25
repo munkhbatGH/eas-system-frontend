@@ -18,6 +18,8 @@ export default function MobileMenu() {
     };
   }, [isOpen]);
 
+	const isProd = process.env.NODE_ENV === 'production'
+  const baseUrl = isProd ? '/eas-system-frontend' : '';
   return (
     <>
       <button
@@ -38,21 +40,21 @@ export default function MobileMenu() {
 
           <nav className="flex flex-col items-center space-y-6 text-lg font-semibold">
             <Link
-              href="/admin/settings"
+              href={`${baseUrl}/admin/settings`}
               onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
               Dashboard
             </Link>
             <Link
-              href="/admin/settings/mod"
+              href={`${baseUrl}/admin/settings/mod`}
               onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
               Module
             </Link>
             <Link
-              href="/admin/settings/mod"
+              href={`${baseUrl}/admin/settings/mod`}
               onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
