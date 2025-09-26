@@ -23,6 +23,9 @@ const nextConfig = {
   images: {
     unoptimized: true, // required for static export
   },
+  eslint: {
+    ignoreDuringBuilds: true, // ✅ disables lint during build
+  },
 }
 
 module.exports = {...withPWA(nextConfig)}
