@@ -21,8 +21,12 @@ export async function fetchClient(
     }
 
     const res = await fetch(url, {
+        credentials: 'include', // ✅ required to receive/set cookies from server
         ...options, headers
     })
+
+    // const setCookie = res.headers.get('set-cookie'); // ← get deviceToken here
+    // console.log('Set-Cookie header:', setCookie);
 
     if (res.status === 401) {
       Cookies.remove(token_name);
