@@ -13,6 +13,7 @@ export async function fetchClient(
         'Content-Type': 'application/json',
         // ...options.headers
         Authorization: '',
+        'ngrok-skip-browser-warning': 'true', // ✅ Skip ngrok warning
     }
 
     const tok = Cookies.get(token_name);
@@ -21,7 +22,7 @@ export async function fetchClient(
     }
 
     const res = await fetch(url, {
-        // credentials: 'include', // ✅ required to receive/set cookies from server
+        credentials: 'include', // ✅ required to receive/set cookies from server
         ...options, headers
     })
 
