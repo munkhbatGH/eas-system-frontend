@@ -10,6 +10,7 @@ import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
 import { SchemaService } from "@/services/schema.service";
 import { SpinnerIcon } from "@/components/icons";
+import { addToast } from "@heroui/toast";
 
 export default function Profile() {
   const [columns, setColumns] = useState<any[]>([]);
@@ -18,6 +19,14 @@ export default function Profile() {
   const [isDialog, setIsDialog] = useState(false)
   const [isTableLoading, setIsTableLoading] = useState(true)
   const [saveLoading, setSaveLoading] = useState(false)
+  const [dialogTitle, setDialogTitle] = useState<string>('Бүртгэх')
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  const [initData, setInitData] = useState<any>({
+    _id: null,
+    code: '',
+    name: '',
+    desc: ''
+  });
   
   const tableConfig = {
     columnFilters: true,
@@ -28,10 +37,13 @@ export default function Profile() {
   }
   
   useEffect(() => {
-    fetchData();
+    fetchInit();
   }, []);
+  useEffect(() => {
+    console.log('---initData---', initData)
+  }, [initData]);
 
-  const fetchData = async () => {
+  const fetchInit = async () => {
     await getConfig();
     await getList();
   };
@@ -72,6 +84,23 @@ export default function Profile() {
 
   const _open = () => {
     setIsDialog(!isDialog)
+    setDialogTitle('Бүртгэх')
+  }
+  const _update = () => {
+    setDialogTitle('Засварлах')
+    console.log('---_update---', selectedRows.length, selectedRows)
+    if (selectedRows.length === 0 || selectedRows.length > 1) {
+      addToast({
+        title: `111`,
+        description: `222`,
+        color: "danger",
+      })
+    }
+    const selected = selectedRows[0]
+    const row = list.find(item => item._id === selected)
+    console.log('---row---', row)
+    setInitData(row)
+    setIsDialog(!isDialog)
   }
   const _close = () => {
     setIsDialog(false)
@@ -82,6 +111,9 @@ export default function Profile() {
     const data = Object.fromEntries(new FormData(e.currentTarget));
     save(data)
   };
+  const _rowSelection = (data: any[]) => {
+    setSelectedRows(data)
+  }
 
   if (loading) {
     return <p>Уншиж байна ...</p>
@@ -91,7 +123,7 @@ export default function Profile() {
     <div className="w-full max-sm:w-[325px]">
       <h1 className={title()}>Модуль</h1>
       <div className="mt-5">
-        <EasModal isDialog={isDialog} _close={_close} _open={_open} >
+        <EasModal title={dialogTitle} isDialog={isDialog} _close={_close} _open={_open} >
           <Form className="w-full max-w-xs py-3" onSubmit={_onSubmit}>
             <Input
               isRequired
@@ -100,6 +132,7 @@ export default function Profile() {
               labelPlacement="outside"
               name="code"
               placeholder="Код"
+              defaultValue={initData.code}
             />
             <Input
               isRequired
@@ -108,6 +141,7 @@ export default function Profile() {
               labelPlacement="outside"
               name="name"
               placeholder="Нэр"
+              defaultValue={initData.name}
             />
             <Input
               isRequired
@@ -116,13 +150,22 @@ export default function Profile() {
               labelPlacement="outside"
               name="desc"
               placeholder="Тайлбар"
+              defaultValue={initData.desc}
             />
             <Button type="submit" color="primary" className="mt-3" isLoading={saveLoading} spinner={<SpinnerIcon />}>
               Бүртгэх
             </Button>
           </Form>
         </EasModal>
-        <EasTable isTableLoading={isTableLoading} tableConfig={tableConfig} columns={columns} listData={list} _openDialog={_open} />
+        <EasTable
+          isTableLoading={isTableLoading}
+          tableConfig={tableConfig}
+          columns={columns}
+          rows={list}
+          _openDialog={_open}
+          _updateDialog={_update}
+          _rowSelection={_rowSelection}
+        />
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import { Button } from "@heroui/button";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal"
 import { useEffect, useMemo } from "react";
 
-export default function EasModal({ isDialog, size, _open, _close, children }: any) {
+export default function EasModal({ title, isDialog, size, _open, _close, children }: any) {
   const {isOpen, onOpen, onClose} = useDisclosure();
 
   const sizeMap = {
@@ -46,7 +46,7 @@ export default function EasModal({ isDialog, size, _open, _close, children }: an
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Modal Header</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">{ title ? title : 'Modal' }</ModalHeader>
               <ModalBody>
                 {children}
               </ModalBody>

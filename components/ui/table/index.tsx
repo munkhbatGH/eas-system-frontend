@@ -13,7 +13,7 @@ import {
 import { useId, useCallback, useEffect, useMemo, useState } from "react";
 import { Select, SelectItem } from "@heroui/select";
 import dynamic from 'next/dynamic';
-import { RefreshCcw } from "lucide-react";
+import { RefreshCcw, SquarePen } from "lucide-react";
 
 export const statusOptions = [
   {name: "Active", uid: "active"},
@@ -134,18 +134,20 @@ interface ColumnFilter {
 const tableActions = ['create', 'edit', 'delete', 'view'];
 
 export default function EasTable(
-  { isTableLoading, tableConfig, columns, listData, _openDialog }:
+  { isTableLoading, tableConfig, columns, rows, _openDialog, _updateDialog, _rowSelection }:
   {
     isTableLoading?: boolean,
     tableConfig?: any,
     columns: Array<any>,
-    listData: Array<any>,
+    rows: Array<any>,
     _openDialog: any,
+    _updateDialog: any,
+    _rowSelection: any,
   }
 ) {
   const tableId = useId();
   const [filterValue, setFilterValue] = useState("");
-  const [selectedKeys, setSelectedKeys] = useState(new Set([]));
+  const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(new Set());
   const [visibleColumns, setVisibleColumns] = useState(new Set(columns.map(a => { return a.uid })));
   const [statusFilter, setStatusFilter] = useState("all");
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -155,14 +157,18 @@ export default function EasTable(
   });
   const [page, setPage] = useState(1);
   const hasSearchFilter = Boolean(filterValue);
-  
+  const [selectedColor, setSelectedColor] = useState<"primary" | "default" | "secondary" | "success" | "warning" | "danger">("primary");
+
+  useEffect(() => {
+    console.log('selectedKeys (effect):', Array.from(selectedKeys));
+  }, [selectedKeys]);
 
   const [columnFilters, setColumnFilters] = useState<ColumnFilter>({});
   const updateColumnFilter = (columnKey: string, value: string | number) => {
-    // setColumnFilters(prev => ({
-    //   ...prev,
-    //   [columnKey]: value
-    // }));
+    setColumnFilters(prev => ({
+      ...prev,
+      [columnKey]: value
+    }));
   };
   const clearColumnFilter = (columnKey: string) => {
     setColumnFilters(prev => {
@@ -183,7 +189,7 @@ export default function EasTable(
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
-    let filtered = [...listData];
+    let filtered = [...rows];
 
     Object.entries(columnFilters).forEach(([columnKey, filterValue]) => {
       if (filterValue !== '' && filterValue !== undefined) {
@@ -391,11 +397,23 @@ export default function EasTable(
     return (
       <div className="flex flex-col gap-4 w-full max-sm:max-w-[300px]">
         <div className={`flex gap-3 items-end max-sm:flex-col max-sm:items-start justify-between w-full`}>
-          <div>
+          <div className="flex gap-2">
             {
               tableActions.includes('create') && (
                 <Button color="success" endContent={<PlusIcon />} variant="flat" onPress={_openDialog}>
                   Бүртгэх
+                </Button>
+              )
+            }
+            {
+              tableActions.includes('edit') && (
+                <Button
+                  color="secondary" endContent={<SquarePen />} variant="flat"
+                  onPress={() => {
+                    _updateDialog()
+                  }}
+                >
+                  Засварлах
                 </Button>
               )
             }
@@ -470,8 +488,6 @@ export default function EasTable(
           </div>
         </div>
 
-
-
         {/* Active Filters Display */}
         {hasActiveFilters && (
           <div className="flex gap-2 flex-wrap">
@@ -500,9 +516,10 @@ export default function EasTable(
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    listData.length,
+    rows.length,
     onSearchChange,
     hasSearchFilter,
+    selectedKeys,
   ]);
 
   const bottomContent = useMemo(() => {
@@ -527,7 +544,7 @@ export default function EasTable(
               : `${selectedKeys.size} / ${filteredItems.length}`}
           </span> */}
           <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
-            <span className="text-default-400 text-small">Нийт {listData.length}</span>
+            <span className="text-default-400 text-small">Нийт {rows.length}</span>
 
               {hasActiveFilters && (
                 <Button 
@@ -562,79 +579,8 @@ export default function EasTable(
     );
   }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
-  const DynamicTable = dynamic(
-    () => Promise.resolve(() => (
-      <Table
-        id={tableId}
-        isHeaderSticky
-        aria-label="Example table with custom cells, pagination and sorting"
-        bottomContent={bottomContent}
-        bottomContentPlacement="outside"
-        classNames={{
-          wrapper: "max-h-[382px] w-full max-sm:max-w-[350px] overflow-x-auto",
-        }}
-        selectedKeys={selectedKeys}
-        selectionMode="multiple"
-        topContent={topContent}
-        topContentPlacement="outside"
-      >
-        <TableHeader columns={headerColumns} className="haha">
-          {(column) => (
-            <TableColumn
-              key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-              allowsSorting={column.sortable}
-              className=""
-            >
-              <div className="flex flex-col p-3">
-                <div className="flex items-center gap-1">
-                  {column.name}
-                  {columnFilters[column.uid] && (
-                    <Chip
-                      size="sm"
-                      color="primary"
-                      variant="flat"
-                      onClose={() => clearColumnFilter(column.uid)}
-                    >
-                      ×
-                    </Chip>
-                  )}
-                </div>
-                {renderColumnFilter(column)}
-              </div>
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody emptyContent={"Өгөгдөл байхгүй"} items={sortedItems}>
-          {(item) => (
-            <TableRow key={item._id}>
-              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    )),
-    { 
-      ssr: false,
-      loading: () => (
-        <div className="w-full max-h-[382px] animate-pulse">
-          <div className="h-12 bg-gray-200 rounded mb-4" />
-          <div className="rounded-lg gap-1 flex flex-col">
-            <div className="h-10 bg-gray-100" />
-            <div>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="h-12 bg-gray-50" />
-              ))}
-            </div>
-          </div>
-          <div className="h-12 bg-gray-200 rounded mt-4" />
-        </div>
-      )
-    }
-  );
-  
+
   return (
-    // <DynamicTable />
     <>
       {
         isTableLoading && (
@@ -657,16 +603,22 @@ export default function EasTable(
           <Table
             id={tableId}
             isHeaderSticky
-            aria-label="Example table with custom cells, pagination and sorting"
+            aria-label="Easy table"
             bottomContent={bottomContent}
             bottomContentPlacement="outside"
             classNames={{
               wrapper: "max-h-[382px] w-full max-sm:max-w-[350px] overflow-x-auto",
             }}
-            selectedKeys={selectedKeys}
-            selectionMode="multiple"
             topContent={topContent}
             topContentPlacement="outside"
+            // selectedKeys={selectedKeys}
+            selectionMode="multiple"
+            color={selectedColor}
+            defaultSelectedKeys={selectedKeys}
+            onSelectionChange={(keys) => {
+              setSelectedKeys(new Set(keys as Iterable<string | number>));
+              _rowSelection(Array.from(keys));
+            }}
           >
             <TableHeader columns={headerColumns} className="haha">
               {(column) => (
