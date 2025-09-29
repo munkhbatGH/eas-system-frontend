@@ -11,9 +11,10 @@ export async function fetchClient(
     const url = `${base_url}${endpoint}`
     const headers = {
         'Content-Type': 'application/json',
-        // ...options.headers
+        'Accept': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
         Authorization: '',
-        'ngrok-skip-browser-warning': 'true', // ✅ Skip ngrok warning
+        // ...options.headers
     }
 
     const tok = Cookies.get(token_name);
@@ -22,8 +23,10 @@ export async function fetchClient(
     }
 
     const res = await fetch(url, {
-        credentials: 'include', // ✅ required to receive/set cookies from server
-        ...options, headers
+        ...options,
+        credentials: 'include', // ✅ Important for cookies
+        mode: 'cors', // ✅ Explicitly set CORS mode
+        headers,
     })
 
     if (res.status === 401) {
