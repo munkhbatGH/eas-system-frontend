@@ -586,7 +586,7 @@ export default function EasTable(
               allowsSorting={column.sortable}
               className=""
             >
-              <div className="flex flex-col">
+              <div className="flex flex-col p-3">
                 <div className="flex items-center gap-1">
                   {column.name}
                   {columnFilters[column.uid] && (
@@ -676,7 +676,7 @@ export default function EasTable(
                   allowsSorting={column.sortable}
                   className=""
                 >
-                  <div className="flex flex-col">
+                  <div className="flex flex-col p-3">
                     <div className="flex items-center gap-1">
                       {column.name}
                       {columnFilters[column.uid] && (

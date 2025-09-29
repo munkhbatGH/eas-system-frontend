@@ -88,7 +88,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="w-full max-sm:w-[320px]">
+    <div className="w-full max-sm:w-[325px]">
       <h1 className={title()}>Модуль</h1>
       <div className="mt-5">
         <EasModal isDialog={isDialog} _close={_close} _open={_open} >
