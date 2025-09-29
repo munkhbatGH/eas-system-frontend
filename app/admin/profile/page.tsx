@@ -1,7 +1,8 @@
 "use client"
 
 import { title } from "@/components/primitives";
-import { fetchClient } from "@/lib/fetchClient";
+import axios from "@/lib/axios";
+// import { fetchClient } from "@/lib/fetchClient";
 import { useEffect } from "react";
 
 export default function Profile() {
@@ -12,7 +13,8 @@ export default function Profile() {
 
   const getUserInfo = async () => {
     try {
-      const res = await fetchClient('/auth/profile')
+      // const res = await fetchClient('/auth/profile')
+      const res = (await axios.get('/auth/profile')).data
       console.log('----getUserInfo-----', res)
     } catch (error) {
       console.log('Error Profile:', error);
