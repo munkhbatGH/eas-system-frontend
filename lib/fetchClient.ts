@@ -25,7 +25,6 @@ export async function fetchClient(
     const res = await fetch(url, {
         ...options,
         credentials: 'include', // ✅ Important for cookies
-        mode: 'cors', // ✅ Explicitly set CORS mode
         headers,
     })
 
