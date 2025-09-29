@@ -7,9 +7,9 @@ import {Form} from "@heroui/form";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/userStore";
 import Cookies from "js-cookie";
-// import { fetchClient } from "@/lib/fetchClient";
+import { fetchClient } from "@/lib/fetchClient";
 import { addToast } from "@heroui/toast";
-import axios from "@/lib/axios";
+// import axios from "@/lib/axios";
 
 export default function LoginPage() {
   const router = useRouter()
@@ -19,11 +19,11 @@ export default function LoginPage() {
     try {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(e.currentTarget));
-      // const options = {
-      //   method: 'POST', body: JSON.stringify(data)
-      // }
-      // const res = await fetchClient('/auth/login', options)
-      const res = (await axios.post('/auth/login', data)).data
+      const options = {
+        method: 'POST', body: JSON.stringify(data)
+      }
+      const res = await fetchClient('/auth/login', options)
+      // const res = (await axios.post('/auth/login', data)).data
       if (res?.access_token) {
         setToken(res.access_token);
         Cookies.set(process.env.NEXT_PUBLIC_TOKEN || 'eas-token', res.access_token, { expires: 7 }); // 1 Day = 24 Hrs = 24*60*60 = 86400
