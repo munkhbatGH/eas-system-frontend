@@ -18,8 +18,8 @@ export default function MobileMenu() {
     };
   }, [isOpen]);
 
-	const isProd = process.env.NODE_ENV === 'production'
-  const baseUrl = isProd ? '/eas-system-frontend' : '';
+	// const isProd = process.env.NODE_ENV === 'production'
+  const baseUrl = '' // isProd ? '/eas-system-frontend' : '';
   return (
     <>
       <button
