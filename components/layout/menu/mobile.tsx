@@ -44,7 +44,7 @@ export default function MobileMenu() {
               onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >
-              Dashboard
+              Хянах самбар
             </Link>
             <Link
               href={`${baseUrl}/admin/settings/mod`}

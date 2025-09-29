@@ -32,7 +32,7 @@ export const Sidebar = () => {
             className={` overflow-hidden whitespace-nowrap transition-all duration-300
             ${expanded ? "opacity-100 max-w-xs" : "opacity-0 max-w-0"}`}
           >
-            Dashboard
+            Хянах самбар
           </span>
         </a>
         
