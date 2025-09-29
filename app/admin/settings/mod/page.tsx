@@ -91,9 +91,6 @@ export default function Profile() {
     <div className="w-full max-sm:w-[320px]">
       <h1 className={title()}>Модуль</h1>
       <div className="mt-5">
-        <div className="flex flex-wrap gap-3">
-          <Button onPress={_open}>Open</Button>
-        </div>
         <EasModal isDialog={isDialog} _close={_close} _open={_open} >
           <Form className="w-full max-w-xs py-3" onSubmit={_onSubmit}>
             <Input
@@ -125,7 +122,7 @@ export default function Profile() {
             </Button>
           </Form>
         </EasModal>
-        <EasTable isTableLoading={isTableLoading} tableConfig={tableConfig} columns={columns} datas={list} />
+        <EasTable isTableLoading={isTableLoading} tableConfig={tableConfig} columns={columns} listData={list} _openDialog={_open} />
       </div>
     </div>
   );

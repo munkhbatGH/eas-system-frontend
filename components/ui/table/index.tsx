@@ -131,13 +131,16 @@ interface ColumnFilter {
 }
 
 
+const tableActions = ['create', 'edit', 'delete', 'view'];
+
 export default function EasTable(
-  { isTableLoading, tableConfig, columns, datas }:
+  { isTableLoading, tableConfig, columns, listData, _openDialog }:
   {
     isTableLoading?: boolean,
     tableConfig?: any,
     columns: Array<any>,
-    datas: Array<any>,
+    listData: Array<any>,
+    _openDialog: any,
   }
 ) {
   const tableId = useId();
@@ -180,7 +183,7 @@ export default function EasTable(
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
-    let filtered = [...datas];
+    let filtered = [...listData];
 
     Object.entries(columnFilters).forEach(([columnKey, filterValue]) => {
       if (filterValue !== '' && filterValue !== undefined) {
@@ -387,24 +390,30 @@ export default function EasTable(
     const hasActiveFilters = Object.keys(columnFilters).length > 0;
     return (
       <div className="flex flex-col gap-4 w-full max-sm:max-w-[300px]">
-        <div className={`flex gap-3 items-end max-sm:flex-col max-sm:items-start ${tableConfig?.columnFilters ? 'justify-end' : 'justify-between'}`}>
-          {
-            !tableConfig?.columnFilters && (
-              <Input
-                isClearable
-                className="w-full"
-                placeholder="Search ..."
-                startContent={<SearchIcon />}
-                value={filterValue}
-                onClear={() => onClear()}
-                onValueChange={onSearchChange}
-              />
-            )
-          }
+        <div className={`flex gap-3 items-end max-sm:flex-col max-sm:items-start justify-between w-full`}>
+          <div>
+            {
+              tableActions.includes('create') && (
+                <Button color="success" endContent={<PlusIcon />} variant="flat" onPress={_openDialog}>
+                  Бүртгэх
+                </Button>
+              )
+            }
+            {
+              !tableConfig?.columnFilters && (
+                <Input
+                  isClearable
+                  className="w-full"
+                  placeholder="Search ..."
+                  startContent={<SearchIcon />}
+                  value={filterValue}
+                  onClear={() => onClear()}
+                  onValueChange={onSearchChange}
+                />
+              )
+            }
+          </div>
           <div className="flex gap-3">
-            <Button color="success" endContent={<PlusIcon />} variant="flat">
-              Бүртгэх
-            </Button>
             <Button color="default" endContent={<RefreshCcw className="text-small" width={16} height={16} />} variant="flat">
               Сэргээх
             </Button>
@@ -491,7 +500,7 @@ export default function EasTable(
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    datas.length,
+    listData.length,
     onSearchChange,
     hasSearchFilter,
   ]);
@@ -518,7 +527,7 @@ export default function EasTable(
               : `${selectedKeys.size} / ${filteredItems.length}`}
           </span> */}
           <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
-            <span className="text-default-400 text-small">Нийт {datas.length}</span>
+            <span className="text-default-400 text-small">Нийт {listData.length}</span>
 
               {hasActiveFilters && (
                 <Button 
