@@ -40,7 +40,7 @@ export default function MobileMenu() {
 
           <nav className="flex flex-col items-center space-y-6 text-lg font-semibold">
             <Link
-              href={`${baseUrl}/admin/settings`}
+              href={`${baseUrl}/admin`}
               onClick={() => setIsOpen(false)}
               className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
             >

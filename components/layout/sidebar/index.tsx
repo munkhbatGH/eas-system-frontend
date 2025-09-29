@@ -24,7 +24,7 @@ export const Sidebar = () => {
 
       <nav className={`flex-1 mt-4 space-y-2 ${expanded ? "w-full" : ""}`}>
         <a
-          href="/dashboard"
+          href={`${baseUrl}/admin`}
           className={`w-full flex items-center py-3 px-8 rounded hover:bg-gray-700 transition-colors text-inherit  ${expanded ? "gap-2" : ""}`}
         >
           <Home size={20} />
