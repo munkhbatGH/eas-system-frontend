@@ -27,8 +27,7 @@ export default function Profile() {
     name: '',
     desc: ''
   });
-  const [dialogStatus, setDialogStatus] = useState<string>('create')
-  
+  const [dialogStatus, setDialogStatus] = useState<string>('create') // create | update
   const tableConfig = {
     columnFilters: true,
     globalFilter: true,
@@ -42,6 +41,7 @@ export default function Profile() {
   }, []);
 
 
+  //#region API calls
   const fetchInit = async () => {
     await getConfig();
     await getList();
@@ -95,7 +95,9 @@ export default function Profile() {
       setSaveLoading(false)
     }
   };
+  //#endregion
 
+  //#region Handlers
   const _open = () => {
     setIsDialog(true)
   }
@@ -128,6 +130,7 @@ export default function Profile() {
   const _rowSelection = (data: any[]) => {
     setSelectedRows(data)
   }
+  //#endregion
 
   if (loading) {
     return <p>Уншиж байна ...</p>
