@@ -7,5 +7,8 @@ export const SchemaService = {
   },
   post: (name: string) => {
     return `/schema/post/${name}`
+  },
+  put: (name: string) => {
+    return `/schema/put/${name}`
   }
 }

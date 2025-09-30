@@ -2,7 +2,7 @@ import { Button } from "@heroui/button";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal"
 import { useEffect, useMemo } from "react";
 
-export default function EasModal({ title, isDialog, size, _open, _close, children }: any) {
+export default function EasModal({ title, isUpdate, isDialog, size, _open, _close, children }: any) {
   const {isOpen, onOpen, onClose} = useDisclosure();
 
   const sizeMap = {
@@ -21,14 +21,10 @@ export default function EasModal({ title, isDialog, size, _open, _close, childre
   useEffect(() => {
     if (isShow) {
       handleOpen()
-    }
-  }, [isShow]);
-  
-  useEffect(() => {
-    if (!isShow && !isOpen) {
+    } else {
       handleClose()
     }
-  }, [isOpen]);
+  }, [isShow]);
 
   const handleOpen = () => {
     onOpen()
@@ -42,7 +38,7 @@ export default function EasModal({ title, isDialog, size, _open, _close, childre
 
   return (
     <>
-      <Modal isOpen={isOpen} size={getSize(size)} onClose={onClose}>
+      <Modal isOpen={isOpen} size={getSize(size)} onClose={handleClose}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -52,7 +48,7 @@ export default function EasModal({ title, isDialog, size, _open, _close, childre
               </ModalBody>
               {/* <ModalFooter>
                 <Button type="submit" color="primary" onPress={onClose}>Action</Button>
-                <Button color="danger" variant="light" onPress={onClose}>Close</Button>
+                <Button color="danger" variant="light" onPress={handleClose}>Close</Button>
               </ModalFooter> */}
             </>
           )}

@@ -27,6 +27,7 @@ export default function Profile() {
     name: '',
     desc: ''
   });
+  const [dialogStatus, setDialogStatus] = useState<string>('create')
   
   const tableConfig = {
     columnFilters: true,
@@ -39,9 +40,7 @@ export default function Profile() {
   useEffect(() => {
     fetchInit();
   }, []);
-  useEffect(() => {
-    console.log('---initData---', initData)
-  }, [initData]);
+
 
   const fetchInit = async () => {
     await getConfig();
@@ -52,15 +51,17 @@ export default function Profile() {
       const data = await fetchClient(SchemaService.config('SetModule'))
       setColumns(data)
     } catch (error) {
-      console.log('Error Mod -> getConfig:', error)
+      console.error('Error Mod -> getConfig:', error)
     }
   };
   const getList = async () => {
     try {
+      setIsTableLoading(true)
+      setLoading(true)
       const data = await fetchClient(SchemaService.list('SetModule'))
       setList(data)
     } catch (error) {
-      console.log('Error Mod -> getList:', error)
+      console.error('Error Mod -> getList:', error)
     } finally {
       setIsTableLoading(false)
       setLoading(false)
@@ -76,40 +77,53 @@ export default function Profile() {
       _close()
       await getList()
     } catch (error) {
-      console.log('Error Mod -> save:', error)
+      console.error('Error Mod -> save:', error)
+    } finally {
+      setSaveLoading(false)
+    }
+  };
+  const update = async (data: any) => {
+    try {
+      setSaveLoading(true)
+      const options = {
+        method: 'POST', body: JSON.stringify(data)
+      }
+      await fetchClient(SchemaService.put('SetModule'), options)
+    } catch (error) {
+      console.error('Error Mod -> update:', error)
     } finally {
       setSaveLoading(false)
     }
   };
 
   const _open = () => {
-    setIsDialog(!isDialog)
-    setDialogTitle('Бүртгэх')
+    setIsDialog(true)
   }
   const _update = () => {
     setDialogTitle('Засварлах')
-    console.log('---_update---', selectedRows.length, selectedRows)
+    setDialogStatus('update')
     if (selectedRows.length === 0 || selectedRows.length > 1) {
-      addToast({
-        title: `111`,
-        description: `222`,
-        color: "danger",
-      })
+      return addToast({ title: `Анхааруулга`, description: `Нэг мөр сонгоно уу!`, color: "danger" })
     }
     const selected = selectedRows[0]
     const row = list.find(item => item._id === selected)
-    console.log('---row---', row)
     setInitData(row)
-    setIsDialog(!isDialog)
+    setIsDialog(true)
   }
   const _close = () => {
     setIsDialog(false)
     setSaveLoading(false)
+    setDialogTitle('Бүртгэх')
+    setDialogStatus('create')
   }
-  const _onSubmit = (e: any) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget));
-    save(data)
+  const _onSubmit = async (action: any, data: any) => {
+    if (action === "create") {
+      await save(data)
+    } else if (action === "update") {
+      await update(Object.assign({ _id: initData._id }, data))
+    }
+    _close()
+    getList()
   };
   const _rowSelection = (data: any[]) => {
     setSelectedRows(data)
@@ -123,8 +137,17 @@ export default function Profile() {
     <div className="w-full max-sm:w-[325px]">
       <h1 className={title()}>Модуль</h1>
       <div className="mt-5">
-        <EasModal title={dialogTitle} isDialog={isDialog} _close={_close} _open={_open} >
-          <Form className="w-full max-w-xs py-3" onSubmit={_onSubmit}>
+        <EasModal title={dialogTitle} isDialog={isDialog} _close={_close} _open={_open} isUpdate={dialogTitle === 'Засварлах'}>
+          <Form
+            className="w-full max-w-xs py-3" 
+            onSubmit={(e: any) => {
+              e.preventDefault();
+              const data = Object.fromEntries(new FormData(e.currentTarget));
+              const submitter = e.nativeEvent.submitter as HTMLButtonElement | null;
+              const action = submitter?.value;
+              _onSubmit(action, data);
+            }}
+          >
             <Input
               isRequired
               errorMessage="Утга шаардана"
@@ -152,9 +175,22 @@ export default function Profile() {
               placeholder="Тайлбар"
               defaultValue={initData.desc}
             />
-            <Button type="submit" color="primary" className="mt-3" isLoading={saveLoading} spinner={<SpinnerIcon />}>
-              Бүртгэх
-            </Button>
+            <div className="flex gap-3">
+              {
+                dialogStatus === 'create' && (
+                  <Button type="submit" as="button" value="create" color="primary" className="mt-3" isLoading={saveLoading} spinner={<SpinnerIcon />}>
+                    Бүртгэх
+                  </Button>
+                )
+              }
+              {
+                dialogStatus === 'update' && (
+                  <Button type="submit" as="button" value="update" color="primary" className="mt-3" isLoading={saveLoading} spinner={<SpinnerIcon />}>
+                    Засах
+                  </Button>
+                )
+              }
+            </div>
           </Form>
         </EasModal>
         <EasTable
