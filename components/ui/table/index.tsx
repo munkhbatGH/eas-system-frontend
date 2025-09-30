@@ -95,6 +95,7 @@ export default function EasTable(
   //#region Filters
 
   const updateColumnFilter = (columnKey: string, value: string | number) => {
+    if (typeof value === "string" && value.length < 3) return;
     setColumnFilters(prev => ({
       ...prev,
       [columnKey]: value
