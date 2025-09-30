@@ -201,6 +201,7 @@ export default function Profile() {
           _openDialog={_open}
           _updateDialog={_update}
           _rowSelection={_rowSelection}
+          _refreshList={getList}
         />
       </div>
     </div>

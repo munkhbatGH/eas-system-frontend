@@ -134,7 +134,7 @@ interface ColumnFilter {
 const tableActions = ['create', 'edit', 'delete', 'view'];
 
 export default function EasTable(
-  { isTableLoading, tableConfig, columns, rows, _openDialog, _updateDialog, _rowSelection }:
+  { isTableLoading, tableConfig, columns, rows, _openDialog, _updateDialog, _rowSelection, _refreshList }:
   {
     isTableLoading?: boolean,
     tableConfig?: any,
@@ -143,6 +143,7 @@ export default function EasTable(
     _openDialog: any,
     _updateDialog: any,
     _rowSelection: any,
+    _refreshList: any,
   }
 ) {
   const tableId = useId();
@@ -432,7 +433,7 @@ export default function EasTable(
             }
           </div>
           <div className="flex gap-3">
-            <Button color="default" endContent={<RefreshCcw className="text-small" width={16} height={16} />} variant="flat">
+            <Button color="default" endContent={<RefreshCcw className="text-small" width={16} height={16} />} variant="flat" onPress={_refreshList}>
               Сэргээх
             </Button>
             {/* <Dropdown>
