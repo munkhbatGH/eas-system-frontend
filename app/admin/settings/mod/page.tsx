@@ -42,6 +42,7 @@ export default function Profile() {
 
 
   //#region API calls
+
   const fetchInit = async () => {
     await getConfig();
     await getList();
@@ -95,9 +96,11 @@ export default function Profile() {
       setSaveLoading(false)
     }
   };
+
   //#endregion
 
   //#region Handlers
+
   const _open = () => {
     setIsDialog(true)
   }
@@ -130,6 +133,7 @@ export default function Profile() {
   const _rowSelection = (data: any[]) => {
     setSelectedRows(data)
   }
+  
   //#endregion
 
   if (loading) {
