@@ -1,7 +1,7 @@
 "use client"
 
 import { title } from "@/components/primitives";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EasTable from "@/components/ui/table";
 import { fetchClient } from "@/lib/fetchClient";
 import EasModal from "@/components/ui/modal";
@@ -35,10 +35,19 @@ export default function Profile() {
     sorting: true,
     tableClasses: "max-sm:max-w-[58%]",
   }
+  const [limit, setLimit] = useState<number>(5);
+  const [page, setPage] = useState<number>(1);
+
+  const hasRun = useRef(false);
   
   useEffect(() => {
+    if (hasRun.current) return;
+    hasRun.current = true;
     fetchInit();
   }, []);
+  // useEffect(() => {
+  //   getList();
+  // }, [rowsPerPage]);
 
 
   //#region API calls
@@ -59,7 +68,7 @@ export default function Profile() {
     try {
       setIsTableLoading(true)
       setLoading(true)
-      const data = await fetchClient(SchemaService.list('SetModule'))
+      const data = await fetchClient(SchemaService.list('SetModule') + `?page=${page}&limit=${limit}`)
       setList(data)
     } catch (error) {
       console.error('Error Mod -> getList:', error)
@@ -133,7 +142,13 @@ export default function Profile() {
   const _rowSelection = (data: any[]) => {
     setSelectedRows(data)
   }
-  
+  const _changeLimit = (value: number) => {
+    setLimit(value);
+  }
+  const _changePage = (value: number) => {
+    setPage(value);
+  }
+
   //#endregion
 
   if (loading) {
@@ -209,6 +224,8 @@ export default function Profile() {
           _updateDialog={_update}
           _rowSelection={_rowSelection}
           _refreshList={getList}
+          _changeLimit={_changeLimit}
+          _changePage={_changePage}
         />
       </div>
     </div>

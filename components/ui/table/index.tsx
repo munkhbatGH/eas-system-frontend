@@ -61,7 +61,7 @@ type ChipColor = typeof statusColorMap[keyof typeof statusColorMap]; // "success
 
 
 export default function EasTable(
-  { isTableLoading, tableConfig, columns, rows, _openDialog, _updateDialog, _rowSelection, _refreshList }:
+  { isTableLoading, tableConfig, columns, rows, _openDialog, _updateDialog, _rowSelection, _refreshList, _changeLimit, _changePage }:
   {
     isTableLoading?: boolean,
     tableConfig?: any,
@@ -71,6 +71,8 @@ export default function EasTable(
     _updateDialog: any,
     _rowSelection: any,
     _refreshList: any,
+    _changeLimit: any,
+    _changePage: any,
   }
 ) {
   const tableId = useId();
@@ -78,7 +80,7 @@ export default function EasTable(
   const [selectedKeys, setSelectedKeys] = useState<Set<string | number>>(new Set());
   const [visibleColumns, setVisibleColumns] = useState(new Set(columns.map(a => { return a.uid })));
   const [statusFilter, setStatusFilter] = useState("all");
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [limit, setLimit] = useState(5);
   const [sortDescriptor, setSortDescriptor] = useState({
     column: "age",
     direction: "ascending",
@@ -88,9 +90,9 @@ export default function EasTable(
   const [selectedColor, setSelectedColor] = useState<"primary" | "default" | "secondary" | "success" | "warning" | "danger">("primary");
   const [columnFilters, setColumnFilters] = useState<ColumnFilter>({});
 
-  useEffect(() => {
-    console.log('selectedKeys (effect):', Array.from(selectedKeys));
-  }, [selectedKeys]);
+  // useEffect(() => {
+  //   console.log('selectedKeys (effect):', Array.from(selectedKeys));
+  // }, [selectedKeys]);
 
   //#region Filters
 
@@ -150,14 +152,14 @@ export default function EasTable(
     return filtered;
   }, [columnFilters]);
 
-  const pages = Math.ceil(filteredItems.length / rowsPerPage) || 1;
+  const pages = Math.ceil(filteredItems.length / limit) || 1;
 
   const items = useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+    const start = (page - 1) * limit;
+    const end = start + limit;
 
     return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
+  }, [page, filteredItems, limit]);
 
   const sortedItems = useMemo(() => {
     return [...items].sort((a: any, b: any) => {
@@ -168,6 +170,47 @@ export default function EasTable(
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
+
+  const onNextPage = useCallback(() => {
+    if (page < pages) {
+      setPage(page + 1);
+    }
+  }, [page, pages]);
+
+  const onPreviousPage = useCallback(() => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  }, [page]);
+
+  const onChangePaginationLimit = useCallback((e: any) => {
+    setLimit(Number(e.target.value));
+    setPage(1);
+    _changeLimit(Number(e.target.value));
+    _changePage(1);
+  }, []);
+  const onChangePagination = useCallback((page: any) => {
+    setPage(page)
+    _changePage(page);
+  }, []);
+
+  const onSearchChange = useCallback((value: any) => {
+    if (value) {
+      setFilterValue(value);
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const onClear = useCallback(() => {
+    setFilterValue("");
+    setPage(1);
+  }, []);
+
+  //#endregion
+
+  //#region Renders
 
   const renderCell = useCallback((item: any, columnKey: any) => {
     const cellValue = item[columnKey];
@@ -218,41 +261,6 @@ export default function EasTable(
         return cellValue;
     }
   }, []);
-
-  const onNextPage = useCallback(() => {
-    if (page < pages) {
-      setPage(page + 1);
-    }
-  }, [page, pages]);
-
-  const onPreviousPage = useCallback(() => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  }, [page]);
-
-  const onRowsPerPageChange = useCallback((e: any) => {
-    setRowsPerPage(Number(e.target.value));
-    setPage(1);
-  }, []);
-
-  const onSearchChange = useCallback((value: any) => {
-    if (value) {
-      setFilterValue(value);
-      setPage(1);
-    } else {
-      setFilterValue("");
-    }
-  }, []);
-
-  const onClear = useCallback(() => {
-    setFilterValue("");
-    setPage(1);
-  }, []);
-
-  //#endregion
-
-  //#region Renders
 
   const renderColumnFilter = (column: typeof columns[0]) => {
     if (!tableConfig?.columnFilters || !column.filterable) return null;
@@ -449,7 +457,7 @@ export default function EasTable(
     filterValue,
     statusFilter,
     visibleColumns,
-    onRowsPerPageChange,
+    onChangePaginationLimit,
     items.length,
     onSearchChange,
     hasSearchFilter,
@@ -462,22 +470,6 @@ export default function EasTable(
     return (
       <div className="w-full max-sm:max-w-[300px] py-2 px-2 flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
         <div className="flex gap-5">
-          <label className="flex items-center text-default-400 text-small">
-            Хуудаслалт:
-            <select
-              className="bg-transparent outline-solid outline-transparent text-default-400 text-small"
-              onChange={onRowsPerPageChange}
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-            </select>
-          </label>
-          {/* <span className="text-small text-default-400">
-            {selectedKeys.size === filteredItems.length
-              ? "All items selected"
-              : `${selectedKeys.size} / ${filteredItems.length}`}
-          </span> */}
           <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
             <span className="text-default-400 text-small">Нийт {rows.length}</span>
 
@@ -492,6 +484,24 @@ export default function EasTable(
                 </Button>
               )} */}
           </div>
+          <label className="flex items-center text-default-400 text-small">
+            Хуудаслалт:
+            <select
+              className="bg-transparent outline-solid outline-transparent text-default-400 text-small"
+              onChange={onChangePaginationLimit}
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </label>
+          {/* <span className="text-small text-default-400">
+            {selectedKeys.size === filteredItems.length
+              ? "All items selected"
+              : `${selectedKeys.size} / ${filteredItems.length}`}
+          </span> */}
         </div>
         <Pagination
           isCompact
@@ -500,7 +510,7 @@ export default function EasTable(
           color="primary"
           page={page}
           total={pages}
-          onChange={setPage}
+          onChange={(page) => onChangePagination(page)}
         />
         <div className="hidden sm:flex justify-end gap-2">
           <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
