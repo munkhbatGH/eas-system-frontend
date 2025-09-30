@@ -412,10 +412,19 @@ export default function EasTable(
           </div>
         </div>
 
-        {/* Active Filters Display */}
         {hasActiveFilters && (
+          <Button 
+            color="danger" 
+            variant="light" 
+            size="sm"
+            onPress={clearAllFilters}
+          >
+            Хайлт цэвэрлэх ({Object.keys(columnFilters).length})
+          </Button>
+        )}
+        {/* {hasActiveFilters && (
           <div className="flex gap-2 flex-wrap">
-            <span className="text-small text-default-500">Active filters:</span>
+            <span className="text-small text-default-500">Шүүлтүүд:</span>
             {Object.entries(columnFilters).map(([columnKey, value]) => {
               const column = columns.find(col => col.uid === columnKey);
               return (
@@ -431,7 +440,7 @@ export default function EasTable(
               );
             })}
           </div>
-        )}
+        )} */}
 
       </div>
     );
@@ -440,10 +449,11 @@ export default function EasTable(
     statusFilter,
     visibleColumns,
     onRowsPerPageChange,
-    rows.length,
+    items.length,
     onSearchChange,
     hasSearchFilter,
     selectedKeys,
+    columnFilters,
   ]);
 
   const bottomContent = useMemo(() => {
@@ -470,16 +480,16 @@ export default function EasTable(
           <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
             <span className="text-default-400 text-small">Нийт {rows.length}</span>
 
-              {hasActiveFilters && (
+              {/* {hasActiveFilters && (
                 <Button 
                   color="danger" 
                   variant="light" 
                   size="sm"
                   onPress={clearAllFilters}
                 >
-                  Clear All Filters ({Object.keys(columnFilters).length})
+                  Хайлт цэвэрлэх ({Object.keys(columnFilters).length})
                 </Button>
-              )}
+              )} */}
           </div>
         </div>
         <Pagination
@@ -530,13 +540,13 @@ export default function EasTable(
             id={tableId}
             isHeaderSticky
             aria-label="Easy table"
-            bottomContent={bottomContent}
-            bottomContentPlacement="outside"
             classNames={{
               wrapper: "max-h-[382px] w-full max-sm:max-w-[350px] overflow-x-auto",
             }}
             topContent={topContent}
             topContentPlacement="outside"
+            bottomContent={bottomContent}
+            bottomContentPlacement="outside"
             // selectedKeys={selectedKeys}
             selectionMode="multiple"
             color={selectedColor}
