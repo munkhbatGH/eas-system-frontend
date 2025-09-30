@@ -112,6 +112,7 @@ export default function EasTable(
   };
   const clearAllFilters = () => {
     setColumnFilters({});
+    _refreshList();
   };
 
   //#endregion
@@ -270,7 +271,7 @@ export default function EasTable(
         return (
           <Input
             size="sm"
-            placeholder={`Filter ${column.name.toLowerCase()}...`}
+            placeholder={` ${column.name.toLowerCase()}...`}
             defaultValue={String(filterValue)}
             onChange={(e) => updateColumnFilter(column.uid, e.target.value)}
             onClear={() => clearColumnFilter(column.uid)}
@@ -284,7 +285,7 @@ export default function EasTable(
           <Input
             size="sm"
             type="number"
-            placeholder={`Filter ${column.name.toLowerCase()}...`}
+            placeholder={` ${column.name.toLowerCase()}...`}
             defaultValue={String(filterValue)}
             onChange={(e) => updateColumnFilter(column.uid, Number(e.target.value) || '')}
             onClear={() => clearColumnFilter(column.uid)}
@@ -298,7 +299,7 @@ export default function EasTable(
         return (
           <Select
             size="sm"
-            placeholder={`Filter ${column.name.toLowerCase()}...`}
+            placeholder={` ${column.name.toLowerCase()}...`}
             selectedKeys={filterValue ? [String(filterValue)] : []}
             onSelectionChange={(keys) => {
               const selectedKey = Array.from(keys)[0];
