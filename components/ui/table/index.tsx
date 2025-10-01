@@ -12,7 +12,7 @@ import {
 } from "@heroui/table";
 import { useId, useCallback, useEffect, useMemo, useState } from "react";
 import { Select, SelectItem } from "@heroui/select";
-import { ChevronDownIcon, PlusIcon, RefreshCcw, SearchIcon, SquarePen } from "lucide-react";
+import { ChevronDownIcon, PlusIcon, RefreshCcw, SearchIcon, SquarePen, Trash2 } from "lucide-react";
 
 export const statusOptions = [
   {name: "Active", uid: "active"},
@@ -63,7 +63,8 @@ type ChipColor = typeof statusColorMap[keyof typeof statusColorMap]; // "success
 export default function EasTable(
   {
     isTableLoading, tableConfig, columns, rows, total, page,
-    _openDialog, _updateDialog, _rowSelection, _refreshList, _changeLimit, _changePage
+    _openDialog, _updateDialog, _rowSelection, _refreshList, _changeLimit, _changePage,
+    _delete
   }:
   {
     isTableLoading?: boolean,
@@ -78,6 +79,7 @@ export default function EasTable(
     _refreshList: any,
     _changeLimit: any,
     _changePage: any,
+    _delete: any,
   }
 ) {
   const tableId = useId();
@@ -353,6 +355,18 @@ export default function EasTable(
               )
             }
             {
+              tableActions.includes('edit') && (
+                <Button
+                  color="danger" endContent={<Trash2 />} variant="flat"
+                  onPress={() => {
+                    _delete()
+                  }}
+                >
+                  Устгах
+                </Button>
+              )
+            }
+            {
               !tableConfig?.columnFilters && (
                 <Input
                   isClearable
@@ -367,7 +381,7 @@ export default function EasTable(
             }
           </div>
           <div className="flex gap-3">
-            <Button color="default" endContent={<RefreshCcw className="text-small" width={16} height={16} />} variant="flat" onPress={_refreshList}>
+            <Button color="primary" endContent={<RefreshCcw className="text-small" width={16} height={16} />} variant="flat" onPress={_refreshList}>
               Сэргээх
             </Button>
             {/* <Dropdown>

@@ -107,8 +107,24 @@ export default function Profile() {
         method: 'POST', body: JSON.stringify(data)
       }
       await fetchClient(SchemaService.put('SetModule'), options)
+      await getList()
     } catch (error) {
       console.error('Error Mod -> update:', error)
+    } finally {
+      setSaveLoading(false)
+    }
+  };
+  const deleteApi = async (data: any) => {
+    console.log('deleteApi:', data)
+    try {
+      setSaveLoading(true)
+      const options = {
+        method: 'DELETE', body: JSON.stringify({ id: data })
+      }
+      await fetchClient(SchemaService.delete('SetModule'), options)
+      await getList()
+    } catch (error) {
+      console.error('Error Mod -> deleteApi:', error)
     } finally {
       setSaveLoading(false)
     }
@@ -157,6 +173,13 @@ export default function Profile() {
     console.log('page -> _changePage:', value)
     setPage(value);
   }, []);
+  const _deleteApi = () => {
+    if (selectedRows.length === 0 || selectedRows.length > 1) {
+      return addToast({ title: `Анхааруулга`, description: `Нэг мөр сонгоно уу!`, color: "danger" })
+    }
+    const selected = selectedRows[0]
+    deleteApi(selected)
+  }
 
   //#endregion
 
@@ -237,6 +260,7 @@ export default function Profile() {
           _refreshList={getList}
           _changeLimit={_changeLimit}
           _changePage={_changePage}
+          _delete={_deleteApi}
         />
       </div>
     </div>

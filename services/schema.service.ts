@@ -10,5 +10,8 @@ export const SchemaService = {
   },
   put: (name: string) => {
     return `/schema/put/${name}`
+  },
+  delete: (name: string) => {
+    return `/schema/delete/${name}`
   }
 }
