@@ -61,12 +61,17 @@ type ChipColor = typeof statusColorMap[keyof typeof statusColorMap]; // "success
 
 
 export default function EasTable(
-  { isTableLoading, tableConfig, columns, rows, _openDialog, _updateDialog, _rowSelection, _refreshList, _changeLimit, _changePage }:
+  {
+    isTableLoading, tableConfig, columns, rows, total, page,
+    _openDialog, _updateDialog, _rowSelection, _refreshList, _changeLimit, _changePage
+  }:
   {
     isTableLoading?: boolean,
     tableConfig?: any,
     columns: Array<any>,
     rows: Array<any>,
+    total: number,
+    page: number,
     _openDialog: any,
     _updateDialog: any,
     _rowSelection: any,
@@ -85,14 +90,23 @@ export default function EasTable(
     column: "age",
     direction: "ascending",
   });
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
   const hasSearchFilter = Boolean(filterValue);
   const [selectedColor, setSelectedColor] = useState<"primary" | "default" | "secondary" | "success" | "warning" | "danger">("primary");
   const [columnFilters, setColumnFilters] = useState<ColumnFilter>({});
 
   // useEffect(() => {
-  //   console.log('selectedKeys (effect):', Array.from(selectedKeys));
-  // }, [selectedKeys]);
+  //   console.log('total (effect):', total);
+  // }, [total]);
+
+
+  const haha = useMemo(() => {
+    if (visibleColumns.size === columns?.length) return columns;
+
+    return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+  }, [visibleColumns]);
+
+
 
   //#region Filters
 
@@ -153,52 +167,39 @@ export default function EasTable(
     return filtered;
   }, [columnFilters]);
 
-  const pages = Math.ceil(filteredItems.length / limit) || 1;
-
-  const items = useMemo(() => {
-    const start = (page - 1) * limit;
-    const end = start + limit;
-
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems, limit]);
-
-  const sortedItems = useMemo(() => {
-    return [...items].sort((a: any, b: any) => {
-      const first = a[sortDescriptor.column];
-      const second = b[sortDescriptor.column];
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
-
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
-    });
-  }, [sortDescriptor, items]);
+  const pages = Math.ceil(total / Number(limit)) || 1;
 
   const onNextPage = useCallback(() => {
+    console.log('onNextPage: ', page + 1);
     if (page < pages) {
-      setPage(page + 1);
+      // setPage(page + 1);
+      _changePage(page + 1);
     }
   }, [page, pages]);
 
   const onPreviousPage = useCallback(() => {
+    console.log('onPreviousPage: ', page - 1);
     if (page > 1) {
-      setPage(page - 1);
+      // setPage(page - 1);
+      _changePage(page - 1);
     }
   }, [page]);
 
   const onChangePaginationLimit = useCallback((e: any) => {
     setLimit(Number(e.target.value));
-    setPage(1);
+    // setPage(1);
     _changeLimit(Number(e.target.value));
-    _changePage(1);
+    // _changePage(1);
   }, []);
   const onChangePagination = useCallback((page: any) => {
-    setPage(page)
+    // setPage(page)
     _changePage(page);
   }, []);
 
   const onSearchChange = useCallback((value: any) => {
     if (value) {
       setFilterValue(value);
-      setPage(1);
+      // setPage(1);
     } else {
       setFilterValue("");
     }
@@ -206,7 +207,7 @@ export default function EasTable(
 
   const onClear = useCallback(() => {
     setFilterValue("");
-    setPage(1);
+    // setPage(1);
   }, []);
 
   //#endregion
@@ -459,7 +460,7 @@ export default function EasTable(
     statusFilter,
     visibleColumns,
     onChangePaginationLimit,
-    items.length,
+    filteredItems.length,
     onSearchChange,
     hasSearchFilter,
     selectedKeys,
@@ -472,7 +473,7 @@ export default function EasTable(
       <div className="w-full max-sm:max-w-[300px] py-2 px-2 flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
         <div className="flex gap-5">
           <div className="flex justify-between items-center max-sm:flex-col max-sm:gap-2 max-sm:items-start">
-            <span className="text-default-400 text-small">Нийт {rows.length}</span>
+            <span className="text-default-400 text-small">Нийт {total}</span>
 
               {/* {hasActiveFilters && (
                 <Button 
@@ -523,7 +524,7 @@ export default function EasTable(
         </div>
       </div>
     );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+  }, [selectedKeys, filteredItems.length, page, pages, hasSearchFilter]);
 
   //#endregion
 
@@ -595,7 +596,7 @@ export default function EasTable(
                 </TableColumn>
               )}
             </TableHeader>
-            <TableBody emptyContent={"Өгөгдөл байхгүй"} items={sortedItems}>
+            <TableBody emptyContent={"Өгөгдөл байхгүй"} items={filteredItems}>
               {(item) => (
                 <TableRow key={item._id}>
                   {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

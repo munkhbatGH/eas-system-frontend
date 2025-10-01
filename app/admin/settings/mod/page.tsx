@@ -1,7 +1,7 @@
 "use client"
 
 import { title } from "@/components/primitives";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import EasTable from "@/components/ui/table";
 import { fetchClient } from "@/lib/fetchClient";
 import EasModal from "@/components/ui/modal";
@@ -37,6 +37,7 @@ export default function Profile() {
   }
   const [limit, setLimit] = useState<number>(5);
   const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
 
   const hasRun = useRef(false);
   
@@ -45,9 +46,10 @@ export default function Profile() {
     hasRun.current = true;
     fetchInit();
   }, []);
-  // useEffect(() => {
-  //   getList();
-  // }, [rowsPerPage]);
+  useEffect(() => {
+    console.log('page page (effect):', page);
+    getList(page);
+  }, [page]);
 
 
   //#region API calls
@@ -64,12 +66,18 @@ export default function Profile() {
       console.error('Error Mod -> getConfig:', error)
     }
   };
-  const getList = async () => {
+  const getList = async (initPage = 0) => {
     try {
+      console.log('page -> getList:', initPage)
       setIsTableLoading(true)
       setLoading(true)
-      const data = await fetchClient(SchemaService.list('SetModule') + `?page=${page}&limit=${limit}`)
-      setList(data)
+      const res = await fetchClient(SchemaService.list('SetModule') + `?page=${page}&limit=${limit}`)
+      if (res.total) {
+        setTotal(res.total)
+      }
+      if (res.list) {
+        setList(res.list)
+      }
     } catch (error) {
       console.error('Error Mod -> getList:', error)
     } finally {
@@ -145,9 +153,10 @@ export default function Profile() {
   const _changeLimit = (value: number) => {
     setLimit(value);
   }
-  const _changePage = (value: number) => {
+  const _changePage = useCallback((value: number) => {
+    console.log('page -> _changePage:', value)
     setPage(value);
-  }
+  }, []);
 
   //#endregion
 
@@ -220,6 +229,8 @@ export default function Profile() {
           tableConfig={tableConfig}
           columns={columns}
           rows={list}
+          total={total}
+          page={page}
           _openDialog={_open}
           _updateDialog={_update}
           _rowSelection={_rowSelection}
