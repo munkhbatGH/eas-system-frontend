@@ -350,7 +350,7 @@ export default function EasTable(
                     _updateDialog()
                   }}
                 >
-                  Засварлах
+                  Засах
                 </Button>
               )
             }
