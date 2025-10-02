@@ -216,6 +216,7 @@ export default function EasTable(
     switch (foundColumn.filterType) {
       case 'object': {
         if (columnKey === 'createdUserId') {
+          if (!cellValue) return ''
           return (
             <User
               avatarProps={{radius: "lg", src: 'https://avatars.githubusercontent.com/u/30373425?v=4'}}
