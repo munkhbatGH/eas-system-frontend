@@ -18,8 +18,8 @@ export const Sidebar = () => {
     console.log('----openMenu-----', openMenu, openMenu === "settings")
   }, [openMenu]);
 
-	const isProd = process.env.NODE_ENV === 'production'
-  const baseUrl = isProd ? '/eas-system-frontend' : '';
+	// const isProd = process.env.NODE_ENV === 'production'
+  const baseUrl = '' // isProd ? '/eas-system-frontend' : '';
   return (
     <aside id="sidebar" className={`max-sm:hidden border-r dark:border-gray-600 border-gray-300 flex flex-col justify-start items-center transition-all duration-300 ${expanded ? "w-64" : "w-16"}`}>
 
