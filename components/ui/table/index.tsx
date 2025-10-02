@@ -210,53 +210,82 @@ export default function EasTable(
 
   const renderCell = useCallback((item: any, columnKey: any) => {
     const cellValue = item[columnKey];
+    const foundColumn = headerColumns.find(item => item.uid === columnKey)
 
-    switch (columnKey) {
-      case "createdUserId":
-        if (!cellValue) return ''
-        return (
-          <User
-            avatarProps={{radius: "lg", src: 'https://avatars.githubusercontent.com/u/30373425?v=4'}}
-            description={cellValue.name}
-            name={cellValue.name}
-          >
-            {cellValue.name}
-          </User>
-        );
-      case "role":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
-            <p className="text-bold text-tiny capitalize text-default-400">{item.team}</p>
-          </div>
-        );
-      case "status": {
-        return (
-          <Chip className="capitalize" color={getColorFromStatus(item.status)} size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
+    if (!foundColumn) return ''
+    switch (foundColumn.filterType) {
+      case 'object': {
+        if (columnKey === 'createdUserId') {
+          return (
+            <User
+              avatarProps={{radius: "lg", src: 'https://avatars.githubusercontent.com/u/30373425?v=4'}}
+              description={cellValue.name}
+              name={cellValue.name}
+            >
+              {cellValue.name}
+            </User>
+          );
+        } else {
+          return 'haha'
+        }
       }
-      case "actions":
-        return (
-          <div className="relative flex justify-end items-center gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-300" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem key="view">View</DropdownItem>
-                <DropdownItem key="edit">Edit</DropdownItem>
-                <DropdownItem key="delete">Delete</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
-      default:
-        return cellValue;
+      case 'ObjectId': {
+        return cellValue.name
+      }
+      case 'text': {
+        return cellValue
+      }
+      default: return cellValue
     }
+
+    // switch (columnKey) {
+    //   case 'moduleId':
+    //     return columnKey
+    //   case "createdUserId":
+    //     if (!cellValue) return ''
+    //     return (
+    //       <User
+    //         avatarProps={{radius: "lg", src: 'https://avatars.githubusercontent.com/u/30373425?v=4'}}
+    //         description={cellValue.name}
+    //         name={cellValue.name}
+    //       >
+    //         {cellValue.name}
+    //       </User>
+    //     );
+    //   case "role":
+    //     return (
+    //       <div className="flex flex-col">
+    //         <p className="text-bold text-small capitalize">{cellValue}</p>
+    //         <p className="text-bold text-tiny capitalize text-default-400">{item.team}</p>
+    //       </div>
+    //     );
+    //   case "status": {
+    //     return (
+    //       <Chip className="capitalize" color={getColorFromStatus(item.status)} size="sm" variant="flat">
+    //         {cellValue}
+    //       </Chip>
+    //     );
+    //   }
+    //   case "actions":
+    //     return (
+    //       <div className="relative flex justify-end items-center gap-2">
+    //         <Dropdown>
+    //           <DropdownTrigger>
+    //             <Button isIconOnly size="sm" variant="light">
+    //               <VerticalDotsIcon className="text-default-300" />
+    //             </Button>
+    //           </DropdownTrigger>
+    //           <DropdownMenu>
+    //             <DropdownItem key="view">View</DropdownItem>
+    //             <DropdownItem key="edit">Edit</DropdownItem>
+    //             <DropdownItem key="delete">Delete</DropdownItem>
+    //           </DropdownMenu>
+    //         </Dropdown>
+    //       </div>
+    //     );
+    //   default:
+    //     return cellValue;
+    // }
   }, []);
 
   const renderColumnFilter = (column: typeof columns[0]) => {
@@ -576,7 +605,7 @@ export default function EasTable(
               _rowSelection(Array.from(keys));
             }}
           >
-            <TableHeader columns={headerColumns} className="haha">
+            <TableHeader columns={headerColumns} className="">
               {(column) => (
                 <TableColumn
                   key={column.uid}

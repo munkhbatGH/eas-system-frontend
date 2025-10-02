@@ -11,9 +11,8 @@ import { Input } from "@heroui/input";
 import { SchemaService } from "@/services/schema.service";
 import { SpinnerIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
-import {Select, SelectItem} from "@heroui/select";
 
-export default function Menu() {
+export default function Action() {
   const [columns, setColumns] = useState<any[]>([]);
   const [list, setList] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -24,8 +23,6 @@ export default function Menu() {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [initData, setInitData] = useState<any>({
     _id: null,
-    moduleId: null,
-    parent: null,
     code: '',
     name: '',
     desc: ''
@@ -41,7 +38,6 @@ export default function Menu() {
   const [limit, setLimit] = useState<number>(5);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [moduleList, setModuleList] = useState<any[]>([]);
 
   const hasRun = useRef(false);
   
@@ -51,7 +47,7 @@ export default function Menu() {
     fetchInit();
   }, []);
   useEffect(() => {
-    console.log('(effect) menu -> page:', page);
+    console.log('page page (effect):', page);
     getList(page);
   }, [page]);
 
@@ -61,14 +57,13 @@ export default function Menu() {
   const fetchInit = async () => {
     await getConfig();
     await getList();
-    getModuleList();
   };
   const getConfig = async () => {
     try {
-      const data = await fetchClient(SchemaService.config('SetMenu'))
+      const data = await fetchClient(SchemaService.config('SetAction'))
       setColumns(data)
     } catch (error) {
-      console.error('Error Menu -> getConfig:', error)
+      console.error('Error Mod -> getConfig:', error)
     }
   };
   const getList = async (initPage = 0) => {
@@ -76,8 +71,7 @@ export default function Menu() {
       console.log('page -> getList:', initPage)
       setIsTableLoading(true)
       setLoading(true)
-      const res = await fetchClient(SchemaService.list('SetMenu') + `?page=${page}&limit=${limit}`)
-      console.log('page -> getList -> res:', res)
+      const res = await fetchClient(SchemaService.list('SetAction') + `?page=${page}&limit=${limit}`)
       if (res.total) {
         setTotal(res.total)
       }
@@ -85,20 +79,10 @@ export default function Menu() {
         setList(res.list)
       }
     } catch (error) {
-      console.error('Error Menu -> getList:', error)
+      console.error('Error Mod -> getList:', error)
     } finally {
       setIsTableLoading(false)
       setLoading(false)
-    }
-  };
-  const getModuleList = async () => {
-    try {
-      const res = await fetchClient(SchemaService.list('SetModule'))
-      if (res.list) {
-        setModuleList(res.list)
-      }
-    } catch (error) {
-      console.error('Error Menu -> getModuleList:', error)
     }
   };
   const save = async (data: any) => {
@@ -107,11 +91,11 @@ export default function Menu() {
       const options = {
         method: 'POST', body: JSON.stringify(data)
       }
-      await fetchClient(SchemaService.post('SetMenu'), options)
+      await fetchClient(SchemaService.post('SetAction'), options)
       _close()
       await getList()
     } catch (error) {
-      console.error('Error Menu -> save:', error)
+      console.error('Error Mod -> save:', error)
     } finally {
       setSaveLoading(false)
     }
@@ -122,10 +106,10 @@ export default function Menu() {
       const options = {
         method: 'POST', body: JSON.stringify(data)
       }
-      await fetchClient(SchemaService.put('SetMenu'), options)
+      await fetchClient(SchemaService.put('SetAction'), options)
       await getList()
     } catch (error) {
-      console.error('Error Menu -> update:', error)
+      console.error('Error Mod -> update:', error)
     } finally {
       setSaveLoading(false)
     }
@@ -137,10 +121,10 @@ export default function Menu() {
       const options = {
         method: 'DELETE', body: JSON.stringify({ id: data })
       }
-      await fetchClient(SchemaService.delete('SetMenu'), options)
+      await fetchClient(SchemaService.delete('SetAction'), options)
       await getList()
     } catch (error) {
-      console.error('Error Menu -> deleteApi:', error)
+      console.error('Error Mod -> deleteApi:', error)
     } finally {
       setSaveLoading(false)
     }
@@ -204,19 +188,11 @@ export default function Menu() {
     setDialogStatus('create')
     setInitData({
       _id: null,
-      moduleId: null,
-      parent: null,
       code: '',
       name: '',
-      desc: ''
+      desc: '',
     })
     setSelectedRows([])
-  }
-  const updateObject = (field: any, value: any) => {
-    setInitData((prev: any) => ({
-      ...prev,
-      [field]: value
-    }));
   }
   //#endregion
 
@@ -226,7 +202,7 @@ export default function Menu() {
 
   return (
     <div className="w-full max-sm:w-[325px]">
-      <h1 className={title()}>Цэс</h1>
+      <h1 className={title()}>Үйлдэл</h1>
       <div className="mt-5">
         <EasModal title={dialogTitle} isDialog={isDialog} _close={_close} _open={_open} isUpdate={dialogTitle === 'Засварлах'}>
           <Form
@@ -239,25 +215,6 @@ export default function Menu() {
               _onSubmit(action, data);
             }}
           >
-            <Select
-              isRequired
-              name="moduleId"
-              className="max-w-xs"
-              defaultSelectedKeys={[]}
-              label="Модуль сонгох"
-              onSelectionChange={(value) => updateObject('moduleId', value.currentKey)}
-            >
-              {moduleList.map((item) => (
-                <SelectItem key={item._id}>{item.name}</SelectItem>
-              ))}
-            </Select>
-            <Input
-              label="Parent"
-              labelPlacement="outside"
-              name="parent"
-              placeholder="Parent"
-              defaultValue={initData.parent}
-            />
             <Input
               isRequired
               errorMessage="Утга шаардана"
@@ -277,6 +234,8 @@ export default function Menu() {
               defaultValue={initData.name}
             />
             <Input
+              isRequired
+              errorMessage="Утга шаардана"
               label="Тайлбар"
               labelPlacement="outside"
               name="desc"
