@@ -12,7 +12,7 @@ import { SchemaService } from "@/services/schema.service";
 import { SpinnerIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
 
-export default function Mod() {
+export default function Menu() {
   const [columns, setColumns] = useState<any[]>([]);
   const [list, setList] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -23,6 +23,7 @@ export default function Mod() {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [initData, setInitData] = useState<any>({
     _id: null,
+    parent: null,
     code: '',
     name: '',
     desc: ''
@@ -60,7 +61,7 @@ export default function Mod() {
   };
   const getConfig = async () => {
     try {
-      const data = await fetchClient(SchemaService.config('SetModule'))
+      const data = await fetchClient(SchemaService.config('SetMenu'))
       setColumns(data)
     } catch (error) {
       console.error('Error Mod -> getConfig:', error)
@@ -71,7 +72,8 @@ export default function Mod() {
       console.log('page -> getList:', initPage)
       setIsTableLoading(true)
       setLoading(true)
-      const res = await fetchClient(SchemaService.list('SetModule') + `?page=${page}&limit=${limit}`)
+      const res = await fetchClient(SchemaService.list('SetMenu') + `?page=${page}&limit=${limit}`)
+      console.log('page -> getList -> res:', res)
       if (res.total) {
         setTotal(res.total)
       }
@@ -91,7 +93,7 @@ export default function Mod() {
       const options = {
         method: 'POST', body: JSON.stringify(data)
       }
-      await fetchClient(SchemaService.post('SetModule'), options)
+      await fetchClient(SchemaService.post('SetMenu'), options)
       _close()
       await getList()
     } catch (error) {
@@ -106,7 +108,7 @@ export default function Mod() {
       const options = {
         method: 'POST', body: JSON.stringify(data)
       }
-      await fetchClient(SchemaService.put('SetModule'), options)
+      await fetchClient(SchemaService.put('SetMenu'), options)
       await getList()
     } catch (error) {
       console.error('Error Mod -> update:', error)
@@ -121,7 +123,7 @@ export default function Mod() {
       const options = {
         method: 'DELETE', body: JSON.stringify({ id: data })
       }
-      await fetchClient(SchemaService.delete('SetModule'), options)
+      await fetchClient(SchemaService.delete('SetMenu'), options)
       await getList()
     } catch (error) {
       console.error('Error Mod -> deleteApi:', error)
@@ -149,10 +151,7 @@ export default function Mod() {
     setIsDialog(true)
   }
   const _close = () => {
-    setIsDialog(false)
-    setSaveLoading(false)
-    setDialogTitle('Бүртгэх')
-    setDialogStatus('create')
+    reset()
   }
   const _onSubmit = async (action: any, data: any) => {
     if (action === "create") {
@@ -183,13 +182,30 @@ export default function Mod() {
 
   //#endregion
 
+  //#region Actions
+  const reset = () => {
+    setIsDialog(false)
+    setSaveLoading(false)
+    setDialogTitle('Бүртгэх')
+    setDialogStatus('create')
+    setInitData({
+      _id: null,
+      parent: null,
+      code: '',
+      name: '',
+      desc: ''
+    })
+    setSelectedRows([])
+  }
+  //#endregion
+
   if (loading) {
     return <p>Уншиж байна ...</p>
   }
 
   return (
     <div className="w-full max-sm:w-[325px]">
-      <h1 className={title()}>Модуль</h1>
+      <h1 className={title()}>Цэс</h1>
       <div className="mt-5">
         <EasModal title={dialogTitle} isDialog={isDialog} _close={_close} _open={_open} isUpdate={dialogTitle === 'Засварлах'}>
           <Form
@@ -202,6 +218,13 @@ export default function Mod() {
               _onSubmit(action, data);
             }}
           >
+            <Input
+              label="Parent"
+              labelPlacement="outside"
+              name="parent"
+              placeholder="Parent"
+              defaultValue={initData.parent}
+            />
             <Input
               isRequired
               errorMessage="Утга шаардана"
@@ -221,8 +244,6 @@ export default function Mod() {
               defaultValue={initData.name}
             />
             <Input
-              isRequired
-              errorMessage="Утга шаардана"
               label="Тайлбар"
               labelPlacement="outside"
               name="desc"

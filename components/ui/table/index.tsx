@@ -97,17 +97,10 @@ export default function EasTable(
   const [selectedColor, setSelectedColor] = useState<"primary" | "default" | "secondary" | "success" | "warning" | "danger">("primary");
   const [columnFilters, setColumnFilters] = useState<ColumnFilter>({});
 
+
   // useEffect(() => {
   //   console.log('total (effect):', total);
   // }, [total]);
-
-
-  const haha = useMemo(() => {
-    if (visibleColumns.size === columns?.length) return columns;
-
-    return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
-  }, [visibleColumns]);
-
 
 
   //#region Filters
@@ -156,7 +149,6 @@ export default function EasTable(
           if (typeof userValue === 'string' && typeof filterValue === 'string') {
             return userValue.toLowerCase().includes(filterValue.toLowerCase());
           }
-          
           if (typeof userValue === 'number' && typeof filterValue === 'number') {
             return userValue === filterValue;
           }
@@ -220,14 +212,15 @@ export default function EasTable(
     const cellValue = item[columnKey];
 
     switch (columnKey) {
-      case "name":
+      case "createdUserId":
+        if (!cellValue) return ''
         return (
           <User
-            avatarProps={{radius: "lg", src: item.avatar}}
-            description={item.email}
-            name={cellValue}
+            avatarProps={{radius: "lg", src: 'https://avatars.githubusercontent.com/u/30373425?v=4'}}
+            description={cellValue.name}
+            name={cellValue.name}
           >
-            {item.email}
+            {cellValue.name}
           </User>
         );
       case "role":
@@ -614,6 +607,7 @@ export default function EasTable(
               {(item) => (
                 <TableRow key={item._id}>
                   {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                  {/* {(columnKey) => <TableCell>{columnKey}</TableCell>} */}
                 </TableRow>
               )}
             </TableBody>
