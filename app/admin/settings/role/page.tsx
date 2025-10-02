@@ -11,8 +11,9 @@ import { Input } from "@heroui/input";
 import { SchemaService } from "@/services/schema.service";
 import { SpinnerIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
+import {CheckboxGroup, Checkbox} from "@heroui/checkbox";
 
-export default function Mod() {
+export default function Role() {
   const [columns, setColumns] = useState<any[]>([]);
   const [list, setList] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -25,7 +26,8 @@ export default function Mod() {
     _id: null,
     code: '',
     name: '',
-    desc: ''
+    desc: '',
+    menuList: []
   });
   const [dialogStatus, setDialogStatus] = useState<string>('create') // create | update
   const tableConfig = {
@@ -38,6 +40,8 @@ export default function Mod() {
   const [limit, setLimit] = useState<number>(5);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
+  const [menuList, setMenuList] = useState<any[]>([]);
+  const [selectedMenus, setSelectedMenus] = useState<any[]>([]);
 
   const hasRun = useRef(false);
   
@@ -47,9 +51,18 @@ export default function Mod() {
     fetchInit();
   }, []);
   useEffect(() => {
-    console.log('page page (effect):', page);
     getList(page);
   }, [page]);
+  // useEffect(() => {
+  //   console.log('(effect) page -> selectedMenus:', selectedMenus);
+  //   updateObject('menuList', selectedMenus)
+  // }, [selectedMenus]);
+  // useEffect(() => {
+  //   console.log('(effect) page -> menuList:', menuList);
+  // }, [menuList]);
+  // useEffect(() => {
+  //   console.log('(effect) page -> initData:', initData);
+  // }, [initData]);
 
 
   //#region API calls
@@ -57,10 +70,11 @@ export default function Mod() {
   const fetchInit = async () => {
     await getConfig();
     await getList();
+    getMenuList();
   };
   const getConfig = async () => {
     try {
-      const data = await fetchClient(SchemaService.config('SetModule'))
+      const data = await fetchClient(SchemaService.config('SetRole'))
       setColumns(data)
     } catch (error) {
       console.error('Error Mod -> getConfig:', error)
@@ -71,7 +85,7 @@ export default function Mod() {
       console.log('page -> getList:', initPage)
       setIsTableLoading(true)
       setLoading(true)
-      const res = await fetchClient(SchemaService.list('SetModule') + `?page=${page}&limit=${limit}`)
+      const res = await fetchClient(SchemaService.list('SetRole') + `?page=${page}&limit=${limit}`)
       if (res.total) {
         setTotal(res.total)
       }
@@ -85,13 +99,25 @@ export default function Mod() {
       setLoading(false)
     }
   };
+  const getMenuList = async () => {
+    try {
+      const res = await fetchClient(SchemaService.list('SetMenu'))
+      if (res.list) {
+        setMenuList(res.list)
+      }
+    } catch (error) {
+      console.error('Error Mod -> getConfig:', error)
+    }
+  };
   const save = async (data: any) => {
     try {
       setSaveLoading(true)
+      data.menuList = selectedMenus
       const options = {
         method: 'POST', body: JSON.stringify(data)
       }
-      await fetchClient(SchemaService.post('SetModule'), options)
+      console.log('options:', options);
+      await fetchClient(SchemaService.post('SetRole'), options)
       _close()
       await getList()
     } catch (error) {
@@ -103,10 +129,12 @@ export default function Mod() {
   const update = async (data: any) => {
     try {
       setSaveLoading(true)
+      data.menuList = selectedMenus
       const options = {
         method: 'POST', body: JSON.stringify(data)
       }
-      await fetchClient(SchemaService.put('SetModule'), options)
+      console.log('update -> options:', options);
+      await fetchClient(SchemaService.put('SetRole'), options)
       await getList()
     } catch (error) {
       console.error('Error Mod -> update:', error)
@@ -121,7 +149,7 @@ export default function Mod() {
       const options = {
         method: 'DELETE', body: JSON.stringify({ id: data })
       }
-      await fetchClient(SchemaService.delete('SetModule'), options)
+      await fetchClient(SchemaService.delete('SetRole'), options)
       await getList()
     } catch (error) {
       console.error('Error Mod -> deleteApi:', error)
@@ -153,9 +181,9 @@ export default function Mod() {
   }
   const _onSubmit = async (action: any, data: any) => {
     if (action === "create") {
-      await save(data)
+      await save(Object.assign({ menuList: selectedMenus }, data))
     } else if (action === "update") {
-      await update(Object.assign({ _id: initData._id }, data))
+      await update(Object.assign({ _id: initData._id, menuList: selectedMenus }, data))
     }
     _close()
     getList()
@@ -191,8 +219,15 @@ export default function Mod() {
       code: '',
       name: '',
       desc: '',
+      menuList: []
     })
     setSelectedRows([])
+  }
+  const updateObject = (field: any, value: any) => {
+    setInitData((prev: any) => ({
+      ...prev,
+      [field]: value
+    }));
   }
   //#endregion
 
@@ -202,7 +237,7 @@ export default function Mod() {
 
   return (
     <div className="w-full max-sm:w-[325px]">
-      <h1 className={title()}>Модуль</h1>
+      <h1 className={title()}>Дүр</h1>
       <div className="mt-5">
         <EasModal title={dialogTitle} isDialog={isDialog} _close={_close} _open={_open} isUpdate={dialogTitle === 'Засварлах'}>
           <Form
@@ -242,6 +277,18 @@ export default function Mod() {
               placeholder="Тайлбар"
               defaultValue={initData.desc}
             />
+            <CheckboxGroup
+              name="menuList" isRequired errorMessage="Утга шаардана"
+              defaultValue={initData.menuList} label="Цэс сонгох" onChange={setSelectedMenus}
+            >
+              {
+                menuList.map((item) => {
+                  return (
+                    <Checkbox value={item.name} key={item._id}>{ item.name }</Checkbox>
+                  )
+                })
+              }
+            </CheckboxGroup>
             <div className="flex gap-3">
               {
                 dialogStatus === 'create' && (
