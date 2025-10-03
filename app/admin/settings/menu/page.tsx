@@ -200,7 +200,7 @@ export default function Menu() {
       const options = {
         method: 'DELETE', body: JSON.stringify({ id: data._id })
       }
-      await fetchClient(SchemaService.delete('SetAction'), options)
+      await fetchClient(SchemaService.delete('SetAction'), options);
       getActionList()
     } catch (error) {
       console.error('Error Menu -> deleteAction:', error)
