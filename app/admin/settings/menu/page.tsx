@@ -331,7 +331,11 @@ export default function Menu() {
             <Select
               isRequired
               name="moduleId"
+<<<<<<< HEAD
               className=""
+=======
+              className="max-w-xs"
+>>>>>>> refs/remotes/origin/main
               defaultSelectedKeys={initData.moduleId ? [initData.moduleId._id] : []}
               label="Модуль сонгох"
               onSelectionChange={(value) => updateObject('moduleId', value.currentKey)}
