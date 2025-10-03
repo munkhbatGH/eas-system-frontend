@@ -34,7 +34,7 @@ export const Sidebar = () => {
 	// const isProd = process.env.NODE_ENV === 'production'
   const baseUrl = '' // isProd ? '/eas-system-frontend' : '';
   return (
-    <aside id="sidebar" className={`max-sm:hidden border-r dark:border-gray-600 border-gray-300 flex flex-col justify-start items-center transition-all duration-300 ${expanded ? "w-64" : "w-20"}`}>
+    <aside id="sidebar" className={`max-sm:hidden border-r border-gray-300 flex flex-col justify-start items-center transition-all duration-300 ${expanded ? "w-64" : "w-20"}`}>
       <nav className={`flex-1 mt-4 space-y-2 ${expanded ? "w-full" : ""}`}>
         { menuList.map((menu) => {
           return (
@@ -42,7 +42,7 @@ export const Sidebar = () => {
               <Link
                 key={menu.name}
                 href={menu.path}
-                className={`w-full flex items-center py-3 px-6 rounded hover:bg-gray-700 transition-colors text-inherit  ${expanded ? "gap-2" : ""}`}
+                className={`w-full flex items-center py-3 px-6 rounded  hover:bg-gray-200 dark:md:hover:bg-fuchsia-600  transition-colors text-inherit  ${expanded ? "gap-2" : ""}`}
                 onClick={() => toggleMenu(menu.code)}
               >
                 <DynamicIcon name={menu.icon ? menu.icon : "Home"} props={{ size: 20 }} />
@@ -63,7 +63,7 @@ export const Sidebar = () => {
                       <Link
                         key={subMenu.name}
                         href={`/admin/${subMenu.path}`}
-                        className={`flex items-center py-3 px-4 rounded hover:bg-gray-700 transition-colors text-inherit ${expanded ? "gap-2" : ""}`}
+                        className={`flex items-center py-3 px-4 rounded  hover:bg-gray-200 dark:md:hover:bg-fuchsia-600  transition-colors text-inherit ${expanded ? "gap-2" : ""}`}
                       >
                         { subMenu.icon && (
                           <DynamicIcon name={subMenu.icon ? subMenu.icon : "Minus"} props={{ size: 20 }} />
