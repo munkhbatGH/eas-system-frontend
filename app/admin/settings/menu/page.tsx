@@ -30,7 +30,7 @@ export default function Menu() {
   const [initData, setInitData] = useState<any>({
     _id: null,
     moduleId: null,
-    parent: null,
+    parentId: null,
     code: '',
     name: '',
     order: 0
@@ -285,7 +285,7 @@ export default function Menu() {
     setInitData({
       _id: null,
       moduleId: null,
-      parent: null,
+      parentId: null,
       code: '',
       name: '',
       order: 0
@@ -341,13 +341,17 @@ export default function Menu() {
                 <SelectItem key={item._id}>{item.name}</SelectItem>
               ))}
             </Select>
-            <Input
-              label="Parent"
-              labelPlacement="outside"
-              name="parent"
-              placeholder="Parent"
-              defaultValue={initData.parent}
-            />
+            <Select
+              name="parentId"
+              className=""
+              defaultSelectedKeys={initData.parentId ? [initData.parentId._id] : []}
+              label="Parent сонгох"
+              onSelectionChange={(value) => updateObject('parentId', value.currentKey)}
+            >
+              {list.map((item) => (
+                <SelectItem key={item._id}>{item.name}</SelectItem>
+              ))}
+            </Select>
             <Input
               isRequired
               errorMessage="Утга шаардана"

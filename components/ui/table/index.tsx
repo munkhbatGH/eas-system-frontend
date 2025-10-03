@@ -231,6 +231,7 @@ export default function EasTable(
         }
       }
       case 'ObjectId': {
+        if (!cellValue) return ''
         return cellValue.name
       }
       case 'text': {
