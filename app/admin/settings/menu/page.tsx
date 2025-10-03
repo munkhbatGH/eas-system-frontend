@@ -243,7 +243,7 @@ export default function Menu() {
               isRequired
               name="moduleId"
               className="max-w-xs"
-              defaultSelectedKeys={[]}
+              defaultSelectedKeys={initData.moduleId ? [initData.moduleId._id] : []}
               label="Модуль сонгох"
               onSelectionChange={(value) => updateObject('moduleId', value.currentKey)}
             >
