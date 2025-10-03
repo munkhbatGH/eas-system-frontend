@@ -43,7 +43,7 @@ export const Sidebar = () => {
           className={`flex items-center py-3 px-8 rounded hover:bg-gray-700 transition-colors text-inherit ${expanded ? "gap-2" : ""}`}
         >
           <Settings size={20} />
-          <span>Тохиргоо</span>
+          <span className={`${expanded ? "opacity-100 max-w-xs" : "opacity-0 max-w-0"}`}>Тохиргоо</span>
           {openMenu === "settings" ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
         </Link>
         {openMenu === "settings" && (
