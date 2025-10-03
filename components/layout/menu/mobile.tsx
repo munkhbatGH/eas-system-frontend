@@ -67,6 +67,13 @@ export default function MobileMenu() {
             >
               Дүр
             </Link>
+            <Link
+              href={`${baseUrl}/admin/settings/users`}
+              onClick={() => setIsOpen(false)}
+              className="text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
+            >
+              <span>Хэрэглэгчид</span>
+            </Link>
           </nav>
         </div>
       )}

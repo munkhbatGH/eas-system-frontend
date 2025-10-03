@@ -13,7 +13,7 @@ import { SpinnerIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
 import {Select, SelectItem} from "@heroui/select";
 
-export default function Action() {
+export default function Users() {
   const [columns, setColumns] = useState<any[]>([]);
   const [list, setList] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -24,11 +24,8 @@ export default function Action() {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [initData, setInitData] = useState<any>({
     _id: null,
-    moduleId: null,
-    parent: null,
-    code: '',
     name: '',
-    desc: ''
+    password: ''
   });
   const [dialogStatus, setDialogStatus] = useState<string>('create') // create | update
   const tableConfig = {
@@ -50,10 +47,6 @@ export default function Action() {
     hasRun.current = true;
     fetchInit();
   }, []);
-  useEffect(() => {
-    console.log('(effect) menu -> page:', page);
-    getList(page);
-  }, [page]);
 
 
   //#region API calls
@@ -61,11 +54,10 @@ export default function Action() {
   const fetchInit = async () => {
     await getConfig();
     await getList();
-    getModuleList();
   };
   const getConfig = async () => {
     try {
-      const data = await fetchClient(SchemaService.config('SetAction'))
+      const data = await fetchClient(SchemaService.config('User'))
       setColumns(data)
     } catch (error) {
       console.error('Error Action -> getConfig:', error)
@@ -76,7 +68,7 @@ export default function Action() {
       console.log('page -> getList:', initPage)
       setIsTableLoading(true)
       setLoading(true)
-      const res = await fetchClient(SchemaService.list('SetAction') + `?page=${page}&limit=${limit}`)
+      const res = await fetchClient(SchemaService.list('User') + `?page=${page}&limit=${limit}`)
       if (res.total) {
         setTotal(res.total)
       }
@@ -90,23 +82,13 @@ export default function Action() {
       setLoading(false)
     }
   };
-  const getModuleList = async () => {
-    try {
-      const res = await fetchClient(SchemaService.list('SetModule'))
-      if (res.list) {
-        setModuleList(res.list)
-      }
-    } catch (error) {
-      console.error('Error Action -> getModuleList:', error)
-    }
-  };
   const save = async (data: any) => {
     try {
       setSaveLoading(true)
       const options = {
         method: 'POST', body: JSON.stringify(data)
       }
-      await fetchClient(SchemaService.post('SetAction'), options)
+      await fetchClient(SchemaService.post('User'), options)
       _close()
       await getList()
     } catch (error) {
@@ -121,7 +103,7 @@ export default function Action() {
       const options = {
         method: 'POST', body: JSON.stringify(data)
       }
-      await fetchClient(SchemaService.put('SetAction'), options)
+      await fetchClient(SchemaService.put('User'), options)
       await getList()
     } catch (error) {
       console.error('Error Action -> update:', error)
@@ -136,7 +118,7 @@ export default function Action() {
       const options = {
         method: 'DELETE', body: JSON.stringify({ id: data })
       }
-      await fetchClient(SchemaService.delete('SetAction'), options)
+      await fetchClient(SchemaService.delete('User'), options)
       await getList()
     } catch (error) {
       console.error('Error Action -> deleteApi:', error)
@@ -203,11 +185,8 @@ export default function Action() {
     setDialogStatus('create')
     setInitData({
       _id: null,
-      moduleId: null,
-      parent: null,
-      code: '',
       name: '',
-      desc: ''
+      password: ''
     })
     setSelectedRows([])
   }
@@ -225,7 +204,7 @@ export default function Action() {
 
   return (
     <div className="w-full max-sm:w-[325px]">
-      <h1 className={title()}>Цэсний үйлдэл</h1>
+      <h1 className={title()}>Хэрэглэгчид</h1>
       <div className="mt-5">
         <EasModal title={dialogTitle} isDialog={isDialog} _close={_close} _open={_open} isUpdate={dialogTitle === 'Засварлах'}>
           <Form
@@ -238,7 +217,7 @@ export default function Action() {
               _onSubmit(action, data);
             }}
           >
-            <Select
+            {/* <Select
               isRequired
               name="moduleId"
               className=""
@@ -249,23 +228,7 @@ export default function Action() {
               {moduleList.map((item) => (
                 <SelectItem key={item._id}>{item.name}</SelectItem>
               ))}
-            </Select>
-            <Input
-              label="Parent"
-              labelPlacement="outside"
-              name="parent"
-              placeholder="Parent"
-              defaultValue={initData.parent}
-            />
-            <Input
-              isRequired
-              errorMessage="Утга шаардана"
-              label="Код"
-              labelPlacement="outside"
-              name="code"
-              placeholder="Код"
-              defaultValue={initData.code}
-            />
+            </Select> */}
             <Input
               isRequired
               errorMessage="Утга шаардана"
@@ -276,11 +239,13 @@ export default function Action() {
               defaultValue={initData.name}
             />
             <Input
-              label="Тайлбар"
+              isRequired
+              errorMessage="Утга шаардана"
+              label="Нууц үг"
               labelPlacement="outside"
-              name="desc"
-              placeholder="Тайлбар"
-              defaultValue={initData.desc}
+              name="password"
+              placeholder="Нууц үг"
+              defaultValue={initData.password}
             />
             <div className="flex gap-3">
               {

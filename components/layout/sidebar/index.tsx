@@ -66,6 +66,12 @@ export const Sidebar = () => {
             >
               <span>Дүр</span>
             </Link>
+            <Link
+              href={`${baseUrl}/admin/settings/users`}
+              className={`flex items-center py-3 px-8 rounded hover:bg-gray-700 transition-colors text-inherit ${expanded ? "gap-2" : ""}`}
+            >
+              <span>Хэрэглэгчид</span>
+            </Link>
           </div>
         )}
 
