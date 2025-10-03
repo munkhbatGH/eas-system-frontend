@@ -24,8 +24,9 @@ export default function Users() {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [initData, setInitData] = useState<any>({
     _id: null,
+    roleId: null,
     name: '',
-    password: ''
+    // password: ''
   });
   const [dialogStatus, setDialogStatus] = useState<string>('create') // create | update
   const tableConfig = {
@@ -38,7 +39,7 @@ export default function Users() {
   const [limit, setLimit] = useState<number>(5);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
-  const [moduleList, setModuleList] = useState<any[]>([]);
+  const [roleList, setRoleList] = useState<any[]>([]);
 
   const hasRun = useRef(false);
   
@@ -54,6 +55,7 @@ export default function Users() {
   const fetchInit = async () => {
     await getConfig();
     await getList();
+    getRoleList()
   };
   const getConfig = async () => {
     try {
@@ -80,6 +82,16 @@ export default function Users() {
     } finally {
       setIsTableLoading(false)
       setLoading(false)
+    }
+  };
+  const getRoleList = async () => {
+    try {
+      const res = await fetchClient(SchemaService.listNoLimit('SetRole'))
+      if (res.list) {
+        setRoleList(res.list)
+      }
+    } catch (error) {
+      console.error('Error Menu -> getModuleList:', error)
     }
   };
   const save = async (data: any) => {
@@ -185,8 +197,9 @@ export default function Users() {
     setDialogStatus('create')
     setInitData({
       _id: null,
+      roleId: null,
       name: '',
-      password: ''
+      // password: ''
     })
     setSelectedRows([])
   }
@@ -217,18 +230,18 @@ export default function Users() {
               _onSubmit(action, data);
             }}
           >
-            {/* <Select
+            <Select
               isRequired
-              name="moduleId"
+              name="roleId"
               className=""
-              defaultSelectedKeys={initData.moduleId ? [initData.moduleId._id] : []}
-              label="Модуль сонгох"
-              onSelectionChange={(value) => updateObject('moduleId', value.currentKey)}
+              defaultSelectedKeys={initData.roleId ? [initData.roleId._id] : []}
+              label="Дүр сонгох"
+              onSelectionChange={(value) => updateObject('roleId', value.currentKey)}
             >
-              {moduleList.map((item) => (
+              {roleList.map((item) => (
                 <SelectItem key={item._id}>{item.name}</SelectItem>
               ))}
-            </Select> */}
+            </Select>
             <Input
               isRequired
               errorMessage="Утга шаардана"
@@ -238,7 +251,7 @@ export default function Users() {
               placeholder="Нэр"
               defaultValue={initData.name}
             />
-            <Input
+            {/* <Input
               isRequired
               errorMessage="Утга шаардана"
               label="Нууц үг"
@@ -246,7 +259,7 @@ export default function Users() {
               name="password"
               placeholder="Нууц үг"
               defaultValue={initData.password}
-            />
+            /> */}
             <div className="flex gap-3">
               {
                 dialogStatus === 'create' && (
