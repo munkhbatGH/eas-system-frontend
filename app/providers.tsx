@@ -7,6 +7,7 @@ import { HeroUIProvider } from "@heroui/system";
 import {ToastProvider} from "@heroui/toast";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { ConfirmProvider } from "@/components/ui/confirm/provider";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -27,7 +28,9 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <HeroUIProvider navigate={router.push}>
       <ToastProvider placement={'top-center'} />
-      <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+      <ConfirmProvider>
+        <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+      </ConfirmProvider>
     </HeroUIProvider>
   );
 }

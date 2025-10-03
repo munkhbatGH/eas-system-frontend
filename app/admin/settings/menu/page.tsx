@@ -13,7 +13,9 @@ import { SpinnerIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
 import {Select, SelectItem} from "@heroui/select";
 import {Listbox, ListboxItem} from "@heroui/listbox";
-import { SquarePen, Trash2 } from "lucide-react";
+import { PlusIcon, PlusSquare, SquarePen, Trash2 } from "lucide-react";
+import { Chip } from "@heroui/chip";
+import { useConfirm } from "@/components/ui/confirm/provider";
 
 export default function Menu() {
   const [columns, setColumns] = useState<any[]>([]);
@@ -53,6 +55,7 @@ export default function Menu() {
     name: '',
     desc: ''
   });
+  const confirm = useConfirm();
 
   const hasRun = useRef(false);
   
@@ -159,7 +162,6 @@ export default function Menu() {
     }
   };
   const deleteApi = async (data: any) => {
-    console.log('deleteApi:', data)
     try {
       setSaveLoading(true)
       const options = {
@@ -192,7 +194,18 @@ export default function Menu() {
     } finally {
       setActionSaveLoading(false)
     }
-  }
+  };
+  const deleteAction = async (data: any) => {
+    try {
+      const options = {
+        method: 'DELETE', body: JSON.stringify({ id: data._id })
+      }
+      await fetchClient(SchemaService.delete('SetAction'), options)
+      getActionList()
+    } catch (error) {
+      console.error('Error Menu -> deleteAction:', error)
+    }
+  };
 
   //#endregion
 
@@ -245,6 +258,19 @@ export default function Menu() {
     const data = actionList.find(item => item._id === obj._id)
     setInitAction(data)
     setIsSaveAction(true)
+  }
+  const _deleteAction = async (obj: any) => {
+    const data = actionList.find(item => item._id === obj._id)
+    if (data) {
+      const result = await confirm({
+        title: 'Устгах',
+        description: `(${data.name}) Та устгахдаа итгэлтэй байна уу?`,
+        confirmText: 'Устгах',
+      });
+      if (result) {
+        deleteAction(data)
+      }
+    }
   }
 
   //#endregion
@@ -348,26 +374,29 @@ export default function Menu() {
             />
 
             { initData && initData._id && (
-              <div className="flex flex-col gap-3 border rounded-lg w-full p-3">
+              <div className="flex flex-col gap-3 border border-gray-200 rounded-lg w-full p-3 mt-2">
                 <h1>Үйлдэл</h1>
                 <div className="flex gap-3">
-                  <Button variant="flat" onPress={() => setIsSaveAction(true)}>
-                  Бүртгэх
+                  <Button color="success" variant="flat" onPress={() => setIsSaveAction(true)}>
+                    <PlusIcon width={20} height={20} />
                   </Button>
                 </div>
                 <Listbox>
-                  { actionList.map((item) => {
+                  { actionList.map((item, index) => {
                     return (
                       <ListboxItem key={item.name}>
                         <div className="w-full flex justify-between">
                           <div>
-                            {item.name}
+                            {index + 1} .
+                            <Chip color="secondary" variant="dot">
+                              {item.name}
+                            </Chip>
                           </div>
                           <div className="flex gap-1">
                             <Button isIconOnly aria-label="update" color="success" variant="flat" className="w-5 h-6" onPress={() => _updateAction(item)}>
                               <SquarePen width={16} height={16} />
                             </Button>
-                            <Button isIconOnly aria-label="delete" color="danger" variant="flat" className="w-5 h-6">
+                            <Button isIconOnly aria-label="delete" color="danger" variant="flat" className="w-5 h-6" onPress={() => _deleteAction(item)}>
                               <Trash2 width={16} height={16} />
                             </Button>
                           </div>
