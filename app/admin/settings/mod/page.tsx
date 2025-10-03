@@ -206,7 +206,7 @@ export default function Mod() {
       <div className="mt-5">
         <EasModal title={dialogTitle} isDialog={isDialog} _close={_close} _open={_open} isUpdate={dialogTitle === 'Засварлах'}>
           <Form
-            className="w-full max-w-xs py-3" 
+            className="w-full py-3" 
             onSubmit={(e: any) => {
               e.preventDefault();
               const data = Object.fromEntries(new FormData(e.currentTarget));

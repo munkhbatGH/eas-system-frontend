@@ -5,6 +5,9 @@ export const SchemaService = {
   list: (name: string) => {
     return `/schema/list/${name}`
   },
+  listById: (name: string, id: any) => {
+    return `/schema/list/${name}/${id}`
+  },
   post: (name: string) => {
     return `/schema/post/${name}`
   },

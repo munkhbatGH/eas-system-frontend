@@ -12,6 +12,8 @@ import { SchemaService } from "@/services/schema.service";
 import { SpinnerIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
 import {Select, SelectItem} from "@heroui/select";
+import {Listbox, ListboxItem} from "@heroui/listbox";
+import { SquarePen, Trash2 } from "lucide-react";
 
 export default function Menu() {
   const [columns, setColumns] = useState<any[]>([]);
@@ -42,6 +44,15 @@ export default function Menu() {
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [moduleList, setModuleList] = useState<any[]>([]);
+  const [isSaveAction, setIsSaveAction] = useState(false)
+  const [actionSaveLoading, setActionSaveLoading] = useState(false)
+  const [actionList, setActionList] = useState<any[]>([]);
+  const [initAction, setInitAction] = useState<any>({
+    _id: null,
+    code: '',
+    name: '',
+    desc: ''
+  });
 
   const hasRun = useRef(false);
   
@@ -54,6 +65,13 @@ export default function Menu() {
     console.log('(effect) menu -> page:', page);
     getList(page);
   }, [page]);
+  useEffect(() => {
+    console.log('(effect) menu -> initData:', initData);
+    if (!initData?._id) return
+    if (initData?._id) {
+      getActionList()
+    }
+  }, [initData]);
 
 
   //#region API calls
@@ -96,6 +114,16 @@ export default function Menu() {
       const res = await fetchClient(SchemaService.list('SetModule'))
       if (res.list) {
         setModuleList(res.list)
+      }
+    } catch (error) {
+      console.error('Error Menu -> getModuleList:', error)
+    }
+  };
+  const getActionList = async () => {
+    try {
+      const res = await fetchClient(SchemaService.listById('SetAction', initData?._id))
+      if (res.list) {
+        setActionList(res.list)
       }
     } catch (error) {
       console.error('Error Menu -> getModuleList:', error)
@@ -145,6 +173,26 @@ export default function Menu() {
       setSaveLoading(false)
     }
   };
+  const saveAction = async (data: any) => {
+    try {
+      setActionSaveLoading(true)
+      const body = Object.assign({ menuId: initData._id }, data)
+      const options = {
+        method: 'POST', body: JSON.stringify(body)
+      }
+      if (!data._id) {
+        await fetchClient(SchemaService.post('SetAction'), options)
+      } else {
+        await fetchClient(SchemaService.put('SetAction'), options)
+      }
+      setIsSaveAction(false)
+      getActionList()
+    } catch (error) {
+      console.error('Error Menu -> saveAction:', error)
+    } finally {
+      setActionSaveLoading(false)
+    }
+  }
 
   //#endregion
 
@@ -193,6 +241,11 @@ export default function Menu() {
     const selected = selectedRows[0]
     deleteApi(selected)
   }
+  const _updateAction = (obj: any) => {
+    const data = actionList.find(item => item._id === obj._id)
+    setInitAction(data)
+    setIsSaveAction(true)
+  }
 
   //#endregion
 
@@ -211,6 +264,15 @@ export default function Menu() {
       desc: ''
     })
     setSelectedRows([])
+    setIsSaveAction(false)
+    setActionList([])
+    setActionSaveLoading(false)
+    setInitAction({
+      _id: null,
+      code: '',
+      name: '',
+      desc: ''
+    });
   }
   const updateObject = (field: any, value: any) => {
     setInitData((prev: any) => ({
@@ -229,8 +291,9 @@ export default function Menu() {
       <h1 className={title()}>Цэс</h1>
       <div className="mt-5">
         <EasModal title={dialogTitle} isDialog={isDialog} _close={_close} _open={_open} isUpdate={dialogTitle === 'Засварлах'}>
+        { !isSaveAction && (
           <Form
-            className="w-full max-w-xs py-3" 
+            className="w-full py-3" 
             onSubmit={(e: any) => {
               e.preventDefault();
               const data = Object.fromEntries(new FormData(e.currentTarget));
@@ -242,8 +305,8 @@ export default function Menu() {
             <Select
               isRequired
               name="moduleId"
-              className="max-w-xs"
-              defaultSelectedKeys={[]}
+              className=""
+              defaultSelectedKeys={initData.moduleId ? [initData.moduleId._id] : []}
               label="Модуль сонгох"
               onSelectionChange={(value) => updateObject('moduleId', value.currentKey)}
             >
@@ -283,6 +346,38 @@ export default function Menu() {
               placeholder="Тайлбар"
               defaultValue={initData.desc}
             />
+
+            { initData && initData._id && (
+              <div className="flex flex-col gap-3 border rounded-lg w-full p-3">
+                <h1>Үйлдэл</h1>
+                <div className="flex gap-3">
+                  <Button variant="flat" onPress={() => setIsSaveAction(true)}>
+                  Бүртгэх
+                  </Button>
+                </div>
+                <Listbox>
+                  { actionList.map((item) => {
+                    return (
+                      <ListboxItem key={item.name}>
+                        <div className="w-full flex justify-between">
+                          <div>
+                            {item.name}
+                          </div>
+                          <div className="flex gap-1">
+                            <Button isIconOnly aria-label="update" color="success" variant="flat" className="w-5 h-6" onPress={() => _updateAction(item)}>
+                              <SquarePen width={16} height={16} />
+                            </Button>
+                            <Button isIconOnly aria-label="delete" color="danger" variant="flat" className="w-5 h-6">
+                              <Trash2 width={16} height={16} />
+                            </Button>
+                          </div>
+                        </div>
+                      </ListboxItem>
+                    )
+                  }) }
+                </Listbox>
+              </div>
+            ) }
             <div className="flex gap-3">
               {
                 dialogStatus === 'create' && (
@@ -293,13 +388,53 @@ export default function Menu() {
               }
               {
                 dialogStatus === 'update' && (
-                  <Button type="submit" as="button" value="update" color="primary" className="mt-3" isLoading={saveLoading} spinner={<SpinnerIcon />}>
+                  <Button type="submit" as="button" value="update" color="secondary" className="mt-3" isLoading={saveLoading} spinner={<SpinnerIcon />}>
                     Засах
                   </Button>
                 )
               }
             </div>
           </Form>
+        ) }
+        { isSaveAction && (
+          <div className="w-full">
+            <Form
+              className="w-full py-3" 
+              onSubmit={(e: any) => {
+                e.preventDefault();
+                const data = Object.fromEntries(new FormData(e.currentTarget));
+                saveAction(Object.assign({ _id: initAction._id }, data))
+              }}
+            >
+              <Input
+                isRequired
+                errorMessage="Утга шаардана"
+                label="Код"
+                labelPlacement="outside"
+                name="code"
+                placeholder="Код"
+                defaultValue={initAction.code}
+              />
+              <Input
+                isRequired
+                errorMessage="Утга шаардана"
+                label="Нэр"
+                labelPlacement="outside"
+                name="name"
+                placeholder="Нэр"
+                defaultValue={initAction.name}
+              />
+              <div className="flex mt-3 gap-3">
+                <Button type="submit" color="primary" variant="flat"  isLoading={actionSaveLoading} spinner={<SpinnerIcon />}>
+                  Хадгалах
+                </Button>
+                  <Button color="danger" variant="flat" onPress={() => setIsSaveAction(false)}>
+                  Буцах
+                </Button>
+              </div>
+            </Form>
+          </div>
+        ) }
         </EasModal>
         <EasTable
           isTableLoading={isTableLoading}

@@ -36,19 +36,19 @@ export async function fetchClient(
       }
     }
 
-    if (!res.ok) {
-        const error = await res.json()
-        // throw new Error(`${res.status}: ${error?.message}`)
-        throw new Error(`${error?.message}`)
-    }
     const statusCodes = [400, 403, 404, 500]
     if (statusCodes.includes(res.status)) {
         const error = await res.json()
         addToast({
-          title: `Алдаа гарлаа.`,
-          description: `${error.status || ''}, ${error.message || 'An unknown error occurred'}`,
+          title: `Алдаа гарлаа. ${res.status || ''}`,
+          description: `${error.message || 'An unknown error occurred'}`,
           color: "danger",
         })
+        throw new Error(`${error?.message}`)
+    }
+    if (!res.ok) {
+        const error = await res.json()
+        // throw new Error(`${res.status}: ${error?.message}`)
         throw new Error(`${error?.message}`)
     }
 

@@ -47,7 +47,7 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <Form className="w-full max-w-xs space-y-6" onSubmit={onSubmit}>
+        <Form className="w-full space-y-6" onSubmit={onSubmit}>
           <Input type="username" name="username" placeholder="username" className="w-[320px]" isRequired errorMessage="Please enter a valid username" />
           <Input type="password" name="password" placeholder="password" className="w-[320px]" isRequired errorMessage="Please enter a valid password" />
 

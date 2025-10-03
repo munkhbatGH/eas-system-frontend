@@ -11,6 +11,7 @@ import { Input } from "@heroui/input";
 import { SchemaService } from "@/services/schema.service";
 import { SpinnerIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
+import {Select, SelectItem} from "@heroui/select";
 
 export default function Action() {
   const [columns, setColumns] = useState<any[]>([]);
@@ -23,6 +24,8 @@ export default function Action() {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [initData, setInitData] = useState<any>({
     _id: null,
+    moduleId: null,
+    parent: null,
     code: '',
     name: '',
     desc: ''
@@ -38,6 +41,7 @@ export default function Action() {
   const [limit, setLimit] = useState<number>(5);
   const [page, setPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
+  const [moduleList, setModuleList] = useState<any[]>([]);
 
   const hasRun = useRef(false);
   
@@ -47,7 +51,7 @@ export default function Action() {
     fetchInit();
   }, []);
   useEffect(() => {
-    console.log('page page (effect):', page);
+    console.log('(effect) menu -> page:', page);
     getList(page);
   }, [page]);
 
@@ -57,13 +61,14 @@ export default function Action() {
   const fetchInit = async () => {
     await getConfig();
     await getList();
+    getModuleList();
   };
   const getConfig = async () => {
     try {
       const data = await fetchClient(SchemaService.config('SetAction'))
       setColumns(data)
     } catch (error) {
-      console.error('Error Mod -> getConfig:', error)
+      console.error('Error Action -> getConfig:', error)
     }
   };
   const getList = async (initPage = 0) => {
@@ -79,10 +84,20 @@ export default function Action() {
         setList(res.list)
       }
     } catch (error) {
-      console.error('Error Mod -> getList:', error)
+      console.error('Error Action -> getList:', error)
     } finally {
       setIsTableLoading(false)
       setLoading(false)
+    }
+  };
+  const getModuleList = async () => {
+    try {
+      const res = await fetchClient(SchemaService.list('SetModule'))
+      if (res.list) {
+        setModuleList(res.list)
+      }
+    } catch (error) {
+      console.error('Error Action -> getModuleList:', error)
     }
   };
   const save = async (data: any) => {
@@ -95,7 +110,7 @@ export default function Action() {
       _close()
       await getList()
     } catch (error) {
-      console.error('Error Mod -> save:', error)
+      console.error('Error Action -> save:', error)
     } finally {
       setSaveLoading(false)
     }
@@ -109,7 +124,7 @@ export default function Action() {
       await fetchClient(SchemaService.put('SetAction'), options)
       await getList()
     } catch (error) {
-      console.error('Error Mod -> update:', error)
+      console.error('Error Action -> update:', error)
     } finally {
       setSaveLoading(false)
     }
@@ -124,7 +139,7 @@ export default function Action() {
       await fetchClient(SchemaService.delete('SetAction'), options)
       await getList()
     } catch (error) {
-      console.error('Error Mod -> deleteApi:', error)
+      console.error('Error Action -> deleteApi:', error)
     } finally {
       setSaveLoading(false)
     }
@@ -188,11 +203,19 @@ export default function Action() {
     setDialogStatus('create')
     setInitData({
       _id: null,
+      moduleId: null,
+      parent: null,
       code: '',
       name: '',
-      desc: '',
+      desc: ''
     })
     setSelectedRows([])
+  }
+  const updateObject = (field: any, value: any) => {
+    setInitData((prev: any) => ({
+      ...prev,
+      [field]: value
+    }));
   }
   //#endregion
 
@@ -202,11 +225,11 @@ export default function Action() {
 
   return (
     <div className="w-full max-sm:w-[325px]">
-      <h1 className={title()}>Үйлдэл</h1>
+      <h1 className={title()}>Цэсний үйлдэл</h1>
       <div className="mt-5">
         <EasModal title={dialogTitle} isDialog={isDialog} _close={_close} _open={_open} isUpdate={dialogTitle === 'Засварлах'}>
           <Form
-            className="w-full max-w-xs py-3" 
+            className="w-full py-3" 
             onSubmit={(e: any) => {
               e.preventDefault();
               const data = Object.fromEntries(new FormData(e.currentTarget));
@@ -215,6 +238,25 @@ export default function Action() {
               _onSubmit(action, data);
             }}
           >
+            <Select
+              isRequired
+              name="moduleId"
+              className=""
+              defaultSelectedKeys={initData.moduleId ? [initData.moduleId._id] : []}
+              label="Модуль сонгох"
+              onSelectionChange={(value) => updateObject('moduleId', value.currentKey)}
+            >
+              {moduleList.map((item) => (
+                <SelectItem key={item._id}>{item.name}</SelectItem>
+              ))}
+            </Select>
+            <Input
+              label="Parent"
+              labelPlacement="outside"
+              name="parent"
+              placeholder="Parent"
+              defaultValue={initData.parent}
+            />
             <Input
               isRequired
               errorMessage="Утга шаардана"
@@ -234,8 +276,6 @@ export default function Action() {
               defaultValue={initData.name}
             />
             <Input
-              isRequired
-              errorMessage="Утга шаардана"
               label="Тайлбар"
               labelPlacement="outside"
               name="desc"
