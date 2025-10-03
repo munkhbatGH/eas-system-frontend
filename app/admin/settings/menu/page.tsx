@@ -34,6 +34,7 @@ export default function Menu() {
     code: '',
     name: '',
     path: '',
+    icon: '',
     order: 0
   });
   const [dialogStatus, setDialogStatus] = useState<string>('create') // create | update
@@ -303,6 +304,7 @@ export default function Menu() {
       code: '',
       name: '',
       path: '',
+      icon: '',
       order: 0
     })
     setSelectedRows([])
@@ -393,6 +395,15 @@ export default function Menu() {
               name="path"
               placeholder="Зам"
               defaultValue={initData.path}
+            />
+            <Input
+              isRequired
+              errorMessage="Утга шаардана"
+              label="Icon"
+              labelPlacement="outside"
+              name="icon"
+              placeholder="Icon"
+              defaultValue={initData.icon}
             />
             <NumberInput
               isRequired

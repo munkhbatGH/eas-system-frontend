@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, ChevronRight, Home, Settings } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import Link from 'next/link';
 
 import { useSystemStore } from "@/stores/systemStore";
 import { SettingsService } from "@/services/settings.service";
 import { fetchClient } from "@/lib/fetchClient";
+import DynamicIcon from "@/components/ui/dynamic-icon";
 
 export const Sidebar = () => {
   const { expanded } = useSystemStore();
@@ -44,7 +45,7 @@ export const Sidebar = () => {
                 className={`w-full flex items-center py-3 px-8 rounded hover:bg-gray-700 transition-colors text-inherit  ${expanded ? "gap-2" : ""}`}
                 onClick={() => toggleMenu(menu.code)}
               >
-                <Home size={20} />
+                <DynamicIcon name={menu.icon ? menu.icon : "Home"} props={{ size: 20 }} />
                 <span
                   className={` overflow-hidden whitespace-nowrap transition-all duration-300
                   ${expanded ? "opacity-100 max-w-xs" : "opacity-0 max-w-0"}`}
@@ -64,7 +65,14 @@ export const Sidebar = () => {
                         href={`/admin/${subMenu.path}`}
                         className={`flex items-center py-3 px-8 rounded hover:bg-gray-700 transition-colors text-inherit ${expanded ? "gap-2" : ""}`}
                       >
-                        <span>{subMenu.name}</span>
+                        { subMenu.icon && (
+                          <DynamicIcon name={subMenu.icon ? subMenu.icon : "Minus"} props={{ size: 20 }} />
+                        ) }
+                        <span
+                          className={` overflow-hidden whitespace-nowrap transition-all duration-300
+                          ${expanded ? "opacity-100 max-w-xs" : "opacity-0 max-w-0"}`}
+                        >{subMenu.name}
+                        </span>
                       </Link>
                     )
                   })}
