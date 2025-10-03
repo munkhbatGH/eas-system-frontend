@@ -3,9 +3,25 @@
 import { useState, useEffect } from 'react';
 import { TextAlignJustify, X } from "lucide-react";
 import Link from 'next/link';
+import { fetchClient } from '@/lib/fetchClient';
+import { SettingsService } from '@/services/settings.service';
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const [menuList, setMenuList] = useState<any[]>([]);
+
+  useEffect(() => {
+    getMenuList()
+  }, []);
+
+  const getMenuList = async () => {
+    try {
+      const data = await fetchClient(SettingsService.menuList())
+      if (data) setMenuList(data)
+    } catch (error) {
+      console.error('Error MobileMenu -> getMenuList:', error)
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {

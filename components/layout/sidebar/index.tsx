@@ -22,7 +22,7 @@ export const Sidebar = () => {
       const data = await fetchClient(SettingsService.menuList())
       if (data) setMenuList(data)
     } catch (error) {
-      console.error('Error Action -> getConfig:', error)
+      console.error('Error Sidebar -> getMenuList:', error)
     }
   };
 
@@ -40,7 +40,7 @@ export const Sidebar = () => {
             <div key={menu.name}>
               <Link
                 key={menu.name}
-                href={`#`}
+                href={menu.path}
                 className={`w-full flex items-center py-3 px-8 rounded hover:bg-gray-700 transition-colors text-inherit  ${expanded ? "gap-2" : ""}`}
                 onClick={() => toggleMenu(menu.code)}
               >
@@ -61,7 +61,7 @@ export const Sidebar = () => {
                     return (
                       <Link
                         key={subMenu.name}
-                        href={`#`}
+                        href={`/admin/${subMenu.path}`}
                         className={`flex items-center py-3 px-8 rounded hover:bg-gray-700 transition-colors text-inherit ${expanded ? "gap-2" : ""}`}
                       >
                         <span>{subMenu.name}</span>
