@@ -8,6 +8,7 @@ import EasModal from "@/components/ui/modal";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
+import { NumberInput } from "@heroui/number-input";
 import { SchemaService } from "@/services/schema.service";
 import { SpinnerIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
@@ -32,7 +33,7 @@ export default function Menu() {
     parent: null,
     code: '',
     name: '',
-    desc: ''
+    order: 0
   });
   const [dialogStatus, setDialogStatus] = useState<string>('create') // create | update
   const tableConfig = {
@@ -287,7 +288,7 @@ export default function Menu() {
       parent: null,
       code: '',
       name: '',
-      desc: ''
+      order: 0
     })
     setSelectedRows([])
     setIsSaveAction(false)
@@ -365,12 +366,14 @@ export default function Menu() {
               placeholder="Нэр"
               defaultValue={initData.name}
             />
-            <Input
-              label="Тайлбар"
+            <NumberInput
+              isRequired
+              errorMessage="Утга шаардана"
+              label="Дарааалал"
               labelPlacement="outside"
-              name="desc"
-              placeholder="Тайлбар"
-              defaultValue={initData.desc}
+              name="order"
+              placeholder="0"
+              defaultValue={initData.order}
             />
 
             { initData && initData._id && (
