@@ -33,6 +33,7 @@ export default function Menu() {
     parentId: null,
     code: '',
     name: '',
+    path: '',
     order: 0
   });
   const [dialogStatus, setDialogStatus] = useState<string>('create') // create | update
@@ -56,8 +57,9 @@ export default function Menu() {
     name: '',
     desc: ''
   });
-  const confirm = useConfirm();
+  const [menuList, setMenuList] = useState<any[]>([])
 
+  const confirm = useConfirm();
   const hasRun = useRef(false);
   
   useEffect(() => {
@@ -84,6 +86,7 @@ export default function Menu() {
     await getConfig();
     await getList();
     getModuleList();
+    getMenuList();
   };
   const getConfig = async () => {
     try {
@@ -131,6 +134,16 @@ export default function Menu() {
       }
     } catch (error) {
       console.error('Error Menu -> getModuleList:', error)
+    }
+  };
+  const getMenuList = async () => {
+    try {
+      const res = await fetchClient(SchemaService.listNoLimit('SetMenu'))
+      if (res.list) {
+        setMenuList(res.list)
+      }
+    } catch (error) {
+      console.error('Error Menu -> getMenuList:', error)
     }
   };
   const save = async (data: any) => {
@@ -230,8 +243,8 @@ export default function Menu() {
     reset()
   }
   const _onSubmit = async (action: any, data: any) => {
+    if (data.parentId === '') data.parentId = null
     if (action === "create") {
-      if (data.parentId === '') data.parentId = null
       await save(data)
     } else if (action === "update") {
       await update(Object.assign({ _id: initData._id }, data))
@@ -289,6 +302,7 @@ export default function Menu() {
       parentId: null,
       code: '',
       name: '',
+      path: '',
       order: 0
     })
     setSelectedRows([])
@@ -349,7 +363,7 @@ export default function Menu() {
               label="Parent сонгох"
               onSelectionChange={(value) => updateObject('parentId', value.currentKey)}
             >
-              {list.map((item) => (
+              {menuList.map((item) => (
                 <SelectItem key={item._id}>{item.name}</SelectItem>
               ))}
             </Select>
@@ -370,6 +384,15 @@ export default function Menu() {
               name="name"
               placeholder="Нэр"
               defaultValue={initData.name}
+            />
+            <Input
+              isRequired
+              errorMessage="Утга шаардана"
+              label="Зам"
+              labelPlacement="outside"
+              name="path"
+              placeholder="Зам"
+              defaultValue={initData.path}
             />
             <NumberInput
               isRequired

@@ -295,7 +295,7 @@ export default function Role() {
               {
                 menuList.map((item) => {
                   return (
-                    <Checkbox value={item.name} key={item._id}>{ item.name }</Checkbox>
+                    <Checkbox value={item._id} key={item._id}>{ item.name }</Checkbox>
                   )
                 })
               }
