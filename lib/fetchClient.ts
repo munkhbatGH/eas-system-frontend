@@ -52,5 +52,6 @@ export async function fetchClient(
         throw new Error(`${error?.message}`)
     }
 
+    if (res.status === 204) return null;
     return res.json()
 }

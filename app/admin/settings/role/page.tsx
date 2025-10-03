@@ -24,6 +24,7 @@ export default function Role() {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [initData, setInitData] = useState<any>({
     _id: null,
+    group: '',
     code: '',
     name: '',
     desc: '',
@@ -101,7 +102,7 @@ export default function Role() {
   };
   const getMenuList = async () => {
     try {
-      const res = await fetchClient(SchemaService.list('SetMenu'))
+      const res = await fetchClient(SchemaService.listNoLimit('SetMenu'))
       if (res.list) {
         setMenuList(res.list)
       }
@@ -216,6 +217,7 @@ export default function Role() {
     setDialogStatus('create')
     setInitData({
       _id: null,
+      group: '',
       code: '',
       name: '',
       desc: '',
@@ -250,6 +252,15 @@ export default function Role() {
               _onSubmit(action, data);
             }}
           >
+            <Input
+              isRequired
+              errorMessage="Утга шаардана"
+              label="Бүлэг"
+              labelPlacement="outside"
+              name="group"
+              placeholder="Бүлэг"
+              defaultValue={initData.group}
+            />
             <Input
               isRequired
               errorMessage="Утга шаардана"

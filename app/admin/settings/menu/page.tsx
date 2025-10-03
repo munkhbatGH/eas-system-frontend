@@ -115,7 +115,7 @@ export default function Menu() {
   };
   const getModuleList = async () => {
     try {
-      const res = await fetchClient(SchemaService.list('SetModule'))
+      const res = await fetchClient(SchemaService.listNoLimit('SetModule'))
       if (res.list) {
         setModuleList(res.list)
       }
@@ -231,6 +231,7 @@ export default function Menu() {
   }
   const _onSubmit = async (action: any, data: any) => {
     if (action === "create") {
+      if (data.parentId === '') data.parentId = null
       await save(data)
     } else if (action === "update") {
       await update(Object.assign({ _id: initData._id }, data))

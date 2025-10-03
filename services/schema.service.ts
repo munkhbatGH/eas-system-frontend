@@ -5,6 +5,9 @@ export const SchemaService = {
   list: (name: string) => {
     return `/schema/list/${name}`
   },
+  listNoLimit: (name: string) => {
+    return `/schema/list/${name}?nolimit=true`
+  },
   listById: (name: string, id: any) => {
     return `/schema/list/${name}/${id}`
   },

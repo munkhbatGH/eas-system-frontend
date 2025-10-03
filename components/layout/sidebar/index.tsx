@@ -14,9 +14,9 @@ export const Sidebar = () => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
 
-  useEffect(() => {
-    console.log('----openMenu-----', openMenu, openMenu === "settings")
-  }, [openMenu]);
+  // useEffect(() => {
+  //   console.log('----openMenu-----', openMenu, openMenu === "settings")
+  // }, [openMenu]);
 
 	// const isProd = process.env.NODE_ENV === 'production'
   const baseUrl = '' // isProd ? '/eas-system-frontend' : '';
