@@ -12,6 +12,7 @@ import { SchemaService } from "@/services/schema.service";
 import { SpinnerIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
 import {CheckboxGroup, Checkbox} from "@heroui/checkbox";
+import { useConfirm } from "@/components/ui/confirm/provider";
 
 export default function Role() {
   const [columns, setColumns] = useState<any[]>([]);
@@ -44,6 +45,7 @@ export default function Role() {
   const [menuList, setMenuList] = useState<any[]>([]);
   const [selectedMenus, setSelectedMenus] = useState<any[]>([]);
 
+  const confirm = useConfirm();
   const hasRun = useRef(false);
   
   useEffect(() => {
@@ -130,7 +132,8 @@ export default function Role() {
   const update = async (data: any) => {
     try {
       setSaveLoading(true)
-      data.menuList = selectedMenus
+      const menus = [...selectedMenus, ...initData.menuList]
+      data.menuList = menus
       const options = {
         method: 'POST', body: JSON.stringify(data)
       }
@@ -181,10 +184,17 @@ export default function Role() {
     reset()
   }
   const _onSubmit = async (action: any, data: any) => {
+    const result = await confirm({
+      title: 'Хадгалах',
+      description: `(${data.name}) Та Хадгалахдаа итгэлтэй байна уу?`,
+      confirmText: 'Тийм',
+      cancelText: 'Үгүй',
+    });
+    if (!result) return
     if (action === "create") {
-      await save(Object.assign({ menuList: selectedMenus }, data))
+      await save(data)
     } else if (action === "update") {
-      await update(Object.assign({ _id: initData._id, menuList: selectedMenus }, data))
+      await update(Object.assign({ _id: initData._id }, data))
     }
     _close()
     getList()
@@ -199,12 +209,22 @@ export default function Role() {
     console.log('page -> _changePage:', value)
     setPage(value);
   }, []);
-  const _deleteApi = () => {
+  const _deleteApi = async () => {
     if (selectedRows.length === 0 || selectedRows.length > 1) {
       return addToast({ title: `Анхааруулга`, description: `Нэг мөр сонгоно уу!`, color: "danger" })
     }
     const selected = selectedRows[0]
-    deleteApi(selected)
+    const data = list.find(item => item._id === selected)
+    if (data) {
+      const result = await confirm({
+        title: 'Устгах',
+        description: `(${data.name}) Та устгахдаа итгэлтэй байна уу?`,
+        confirmText: 'Устгах',
+      });
+      if (result) {
+        deleteApi(selected)
+      }
+    }
   }
 
   //#endregion

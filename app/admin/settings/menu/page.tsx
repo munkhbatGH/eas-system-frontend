@@ -245,6 +245,13 @@ export default function Menu() {
   }
   const _onSubmit = async (action: any, data: any) => {
     if (data.parentId === '') data.parentId = null
+    const result = await confirm({
+      title: 'Хадгалах',
+      description: `(${data.name}) Та Хадгалахдаа итгэлтэй байна уу?`,
+      confirmText: 'Тийм',
+      cancelText: 'Үгүй',
+    });
+    if (!result) return
     if (action === "create") {
       await save(data)
     } else if (action === "update") {

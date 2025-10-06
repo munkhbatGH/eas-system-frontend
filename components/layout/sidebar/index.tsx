@@ -17,6 +17,9 @@ export const Sidebar = () => {
   useEffect(() => {
     getMenuList()
   }, [openMenu]);
+  useEffect(() => {
+    console.log('menuList:', menuList)
+  }, [menuList]);
 
   const getMenuList = async () => {
     try {
@@ -36,7 +39,8 @@ export const Sidebar = () => {
   return (
     <aside id="sidebar" className={`max-sm:hidden border-r border-gray-300 flex flex-col justify-start items-center transition-all duration-300 ${expanded ? "w-64" : "w-20"}`}>
       <nav className={`flex-1 mt-4 space-y-2 ${expanded ? "w-full" : ""}`}>
-        { menuList.map((menu) => {
+        { menuList?.length > 0 && menuList.map((menu) => {
+          if (!menu?._id) return
           return (
             <div key={menu.name}>
               <Link

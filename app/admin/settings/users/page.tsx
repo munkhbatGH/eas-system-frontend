@@ -12,6 +12,7 @@ import { SchemaService } from "@/services/schema.service";
 import { SpinnerIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
 import {Select, SelectItem} from "@heroui/select";
+import { useConfirm } from "@/components/ui/confirm/provider";
 
 export default function Users() {
   const [columns, setColumns] = useState<any[]>([]);
@@ -41,6 +42,7 @@ export default function Users() {
   const [total, setTotal] = useState<number>(0);
   const [roleList, setRoleList] = useState<any[]>([]);
 
+  const confirm = useConfirm();
   const hasRun = useRef(false);
   
   useEffect(() => {
@@ -161,6 +163,13 @@ export default function Users() {
     reset()
   }
   const _onSubmit = async (action: any, data: any) => {
+    const result = await confirm({
+      title: 'Хадгалах',
+      description: `(${data.name}) Та Хадгалахдаа итгэлтэй байна уу?`,
+      confirmText: 'Тийм',
+      cancelText: 'Үгүй',
+    });
+    if (!result) return
     if (action === "create") {
       await save(data)
     } else if (action === "update") {
@@ -179,12 +188,22 @@ export default function Users() {
     console.log('page -> _changePage:', value)
     setPage(value);
   }, []);
-  const _deleteApi = () => {
+  const _deleteApi = async () => {
     if (selectedRows.length === 0 || selectedRows.length > 1) {
       return addToast({ title: `Анхааруулга`, description: `Нэг мөр сонгоно уу!`, color: "danger" })
     }
     const selected = selectedRows[0]
-    deleteApi(selected)
+    const data = list.find(item => item._id === selected)
+    if (data) {
+      const result = await confirm({
+        title: 'Устгах',
+        description: `(${data.name}) Та устгахдаа итгэлтэй байна уу?`,
+        confirmText: 'Устгах',
+      });
+      if (result) {
+        deleteApi(selected)
+      }
+    }
   }
 
   //#endregion
