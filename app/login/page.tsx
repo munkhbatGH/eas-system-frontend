@@ -30,10 +30,10 @@ export default function LoginPage() {
         router.push("/admin");
       }
     } catch (error: any) {
-      addToast({
-        title: error.toString(),
-        // color: "danger",
-      })
+      // addToast({
+      //   title: error.toString(),
+      //   // color: "danger",
+      // })
     }
   };
   
