@@ -1,8 +1,8 @@
 "use client";
 
 import { ThemeSwitch } from "@/components/theme-switch";
-import {  Apps, Logo } from "@/components/icons";
-import { BellRing } from "lucide-react";
+import { Logo } from "@/components/icons";
+import { BellRing, LayoutGrid } from "lucide-react";
 import { Avatar } from "@heroui/avatar";
 
 import {
@@ -36,9 +36,9 @@ export const NavbarAdmin = () => {
           </div>
           <MobileMenu />
         </div>
-        <div className="flex items-center gap-2 mr-2 !text-default-500">
-          <Apps />
-          <BellRing />
+        <div className="flex items-center gap-4 mr-2 !text-default-500">
+          <LayoutGrid className="cursor-pointer transition-opacity hover:opacity-80 cursor-pointer" />
+          <BellRing className="cursor-pointer transition-opacity hover:opacity-80 cursor-pointer" />
           <ThemeSwitch />
           <div className="w-[1px] h-[1.3rem] bg-gray-900 dark:bg-white mr-2"></div>
 

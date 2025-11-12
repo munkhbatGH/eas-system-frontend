@@ -5,12 +5,24 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import EasTable from "@/components/ui/table";
 import { fetchClient } from "@/lib/fetchClient";
 import EasModal from "@/components/ui/modal";
+import { SchemaService } from "@/services/schema.service";
 import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Input } from "@heroui/input";
-import { SchemaService } from "@/services/schema.service";
 import { SpinnerIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
+import DynamicFormBuilder from "@/components/ui/formBuilder";
+
+
+const formSchema = {
+  title: "User Registration",
+  fields: [
+    { name: "name", label: "Full Name", type: "text", required: true },
+    { name: "email", label: "Email", type: "email" },
+    { name: "age", label: "Age", type: "number" },
+    { name: "role", label: "Role", type: "select", options: ["Admin", "User", "Guest"] }
+  ]
+}
 
 export default function Organization() {
   const [columns, setColumns] = useState<any[]>([]);
@@ -25,7 +37,7 @@ export default function Organization() {
     _id: null,
     code: '',
     name: '',
-    desc: ''
+    phone: ''
   });
   const [dialogStatus, setDialogStatus] = useState<string>('create') // create | update
   const tableConfig = {
@@ -190,11 +202,15 @@ export default function Organization() {
       _id: null,
       code: '',
       name: '',
-      desc: '',
+      phone: ''
     })
     setSelectedRows([])
   }
   //#endregion
+
+  const handleFormSubmit = (data: Record<string, any>) => {
+    console.log("Received:", data)
+  }
 
   if (loading) {
     return <p>Уншиж байна ...</p>
@@ -205,7 +221,7 @@ export default function Organization() {
       <h1 className={title()}>Байгууллага</h1>
       <div className="mt-5">
         <EasModal title={dialogTitle} isDialog={isDialog} _close={_close} _open={_open} isUpdate={dialogTitle === 'Засварлах'}>
-          <Form
+          {/* <Form
             className="w-full py-3" 
             onSubmit={(e: any) => {
               e.preventDefault();
@@ -258,7 +274,16 @@ export default function Organization() {
                 )
               }
             </div>
-          </Form>
+          </Form> */}
+
+          {/* <DynamicForm
+            title={formSchema.title}
+            fields={formSchema.fields}
+            onSubmit={handleFormSubmit}
+          /> */}
+
+          <h1 className="text-2xl font-bold">🧩 Drag & Drop Form Builder</h1>
+          <DynamicFormBuilder />
         </EasModal>
         <EasTable
           isTableLoading={isTableLoading}
