@@ -56,16 +56,6 @@ export default function Role() {
   useEffect(() => {
     getList(page);
   }, [page]);
-  // useEffect(() => {
-  //   console.log('(effect) page -> selectedMenus:', selectedMenus);
-  //   updateObject('menuList', selectedMenus)
-  // }, [selectedMenus]);
-  // useEffect(() => {
-  //   console.log('(effect) page -> menuList:', menuList);
-  // }, [menuList]);
-  // useEffect(() => {
-  //   console.log('(effect) page -> initData:', initData);
-  // }, [initData]);
 
 
   //#region API calls
@@ -230,6 +220,7 @@ export default function Role() {
   //#endregion
 
   //#region Actions
+
   const reset = () => {
     setIsDialog(false)
     setSaveLoading(false)
@@ -251,6 +242,11 @@ export default function Role() {
       [field]: value
     }));
   }
+  const setMenu = (menus: any[]) => {
+    const set = new Set(menus)
+    updateObject('menuList', Array.from(set))
+  }
+
   //#endregion
 
   if (loading) {
@@ -310,7 +306,7 @@ export default function Role() {
             />
             <CheckboxGroup
               name="menuList" isRequired errorMessage="Утга шаардана"
-              defaultValue={initData.menuList} label="Цэс сонгох" onChange={setSelectedMenus}
+              defaultValue={initData.menuList} label="Цэс сонгох" onChange={(values) => setMenu(values)}
             >
               {
                 menuList.map((item) => {

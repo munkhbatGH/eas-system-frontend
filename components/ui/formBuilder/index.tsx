@@ -69,7 +69,7 @@ function DroppableCell({ rowIndex, colIndex, fields }: DroppableCellProps) {
   return (
     <div
       ref={setNodeRef}
-      className={`w-48 min-h-24 border flex flex-col items-center justify-center rounded transition-colors
+      className={`w-72 min-h-24 border flex flex-col items-center justify-center rounded transition-colors
         ${isOver ? "bg-blue-100 border-blue-400" : "bg-gray-50"}`}
     >
       {fields.length === 0 && (
@@ -82,18 +82,18 @@ function DroppableCell({ rowIndex, colIndex, fields }: DroppableCellProps) {
               key={idx}
               type="text"
               placeholder="Text Input"
-              className="border px-2 py-1 rounded w-40 my-1"
+              className="border px-2 py-1 rounded w-54 my-1"
             />
           ) : field.type === "textarea" ? (
             <textarea
               key={idx}
               placeholder="Textarea"
-              className="border px-2 py-1 rounded w-40 h-16 resize-none my-1"
+              className="border px-2 py-1 rounded w-54 h-16 resize-none my-1"
             />
           ) : field.type === "select" ? (
             <select
               key={idx}
-              className="border px-2 py-1 rounded w-40 my-1"
+              className="border px-2 py-1 rounded w-54 my-1"
             >
               <option>Select option</option>
               <option>Option A</option>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import Link from 'next/link';
+import { v4 as uuidv4 } from "uuid";
 
 import { useSystemStore } from "@/stores/systemStore";
 import { SettingsService } from "@/services/settings.service";
@@ -42,7 +43,7 @@ export const Sidebar = () => {
         { menuList?.length > 0 && menuList.map((menu) => {
           if (!menu?._id) return
           return (
-            <div key={menu.name}>
+            <div key={uuidv4()}>
               <Link
                 key={menu.name}
                 href={menu.path}
