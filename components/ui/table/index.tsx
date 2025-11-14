@@ -64,7 +64,9 @@ export default function EasTable(
   {
     isTableLoading, tableConfig, columns, rows, total, page,
     _openDialog, _updateDialog, _rowSelection, _refreshList, _changeLimit, _changePage,
-    _delete
+    _delete,
+    includeActions,
+    excludeActions
   }:
   {
     isTableLoading?: boolean,
@@ -73,13 +75,15 @@ export default function EasTable(
     rows: Array<any>,
     total: number,
     page: number,
-    _openDialog: any,
-    _updateDialog: any,
+    _openDialog?: any,
+    _updateDialog?: any,
     _rowSelection: any,
     _refreshList: any,
     _changeLimit: any,
     _changePage: any,
-    _delete: any,
+    _delete?: any,
+    includeActions?: string,
+    excludeActions?: string
   }
 ) {
   const tableId = useId();
@@ -360,14 +364,14 @@ export default function EasTable(
         <div className={`flex gap-3 items-end max-sm:flex-col max-sm:items-start justify-between w-full`}>
           <div className="flex gap-2">
             {
-              tableActions.includes('create') && (
+              tableActions.includes('create') && !excludeActions?.includes('create') && (
                 <Button color="success" endContent={<PlusIcon />} variant="flat" onPress={_openDialog}>
                   Бүртгэх
                 </Button>
               )
             }
             {
-              tableActions.includes('edit') && (
+              tableActions.includes('edit') && !excludeActions?.includes('edit') && (
                 <Button
                   color="secondary" endContent={<SquarePen />} variant="flat"
                   onPress={() => {
@@ -379,7 +383,7 @@ export default function EasTable(
               )
             }
             {
-              tableActions.includes('edit') && (
+              tableActions.includes('delete') && !excludeActions?.includes('delete') && (
                 <Button
                   color="danger" endContent={<Trash2 />} variant="flat"
                   onPress={() => {

@@ -68,7 +68,7 @@ export const Sidebar = () => {
                       <Link
                         key={subMenu.name}
                         href={`/admin/${subMenu.path}`}
-                        className={`flex items-center py-3 px-8 rounded  hover:bg-gray-200 dark:md:hover:bg-fuchsia-600  transition-colors text-inherit ${expanded ? "gap-2" : ""}`}
+                        className={`flex items-center py-3 pl-6 rounded  hover:bg-gray-200 dark:md:hover:bg-fuchsia-600  transition-colors text-inherit ${expanded ? "gap-2" : ""}`}
                       >
                         { subMenu.icon && (
                           <DynamicIcon name={subMenu.icon ? subMenu.icon : "Minus"} props={{ size: 20 }} />
